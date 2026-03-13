@@ -1,0 +1,32 @@
+{
+  "name": "tailwind-styled-v4-monorepo",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Monorepo for tailwind-styled-v4 \u2014 compiler-driven, RSC-aware styling",
+  "workspaces": [
+    "packages/*",
+    "examples/*"
+  ],
+  "scripts": {
+    "build": "npm run build -w packages/animate -w packages/theme -w packages/plugin -w packages/preset -w packages/compiler -w packages/cli -w packages/devtools -w packages/runtime-css -w packages/vite -w packages/rspack && npm run build -w packages/next -w packages/core && npm run build -w examples/next-app",
+    "build:packages": "npm run build -w packages/animate -w packages/theme -w packages/plugin -w packages/preset -w packages/compiler -w packages/cli -w packages/devtools -w packages/runtime-css -w packages/vite -w packages/rspack && npm run build -w packages/next -w packages/core",
+    "dev": "npm run dev --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "lint": "oxlint \"packages/*/src/**/*.ts\" \"packages/*/src/**/*.tsx\"",
+    "format": "biome format --write",
+    "check": "biome check",
+    "build:stage1": "npm run build -w packages/animate -w packages/theme -w packages/plugin -w packages/preset -w packages/compiler -w packages/cli -w packages/devtools -w packages/runtime-css -w packages/vite -w packages/rspack",
+    "build:stage2": "npm run build -w packages/next -w packages/core"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "typescript": "^5",
+    "tsup": "^8",
+    "oxlint": "^1.55.0",
+    "@biomejs/biome": "^2.4.6"
+  }
+}

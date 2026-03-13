@@ -1,0 +1,21 @@
+{
+  "name": "@tailwind-styled/preset",
+  "version": "2.0.0",
+  "description": "Default Tailwind preset for tailwind-styled-v4 — zero-config styling",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/defaultPreset.cjs",
+  "module": "./dist/defaultPreset.js",
+  "types": "./dist/defaultPreset.d.ts",
+  "exports": {
+    ".": {
+      "types":   "./dist/defaultPreset.d.ts",
+      "import":  "./dist/defaultPreset.js",
+      "require": "./dist/defaultPreset.cjs"
+    }
+  },
+  "scripts": {
+    "build": "tsup src/defaultPreset.ts --format cjs,esm --dts --out-dir dist --clean",
+    "dev":   "tsup src/defaultPreset.ts --format cjs,esm --dts --out-dir dist --watch"
+  }
+}

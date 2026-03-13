@@ -1,0 +1,32 @@
+{
+  "name": "@tailwind-styled/plugin",
+  "version": "2.0.0",
+  "description": "Plugin system for tailwind-styled-v4 — extend compiler pipeline at any stage",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types":   "./dist/index.d.ts",
+      "import":  "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./plugins": {
+      "types":   "./dist/plugins.d.ts",
+      "import":  "./dist/plugins.js",
+      "require": "./dist/plugins.cjs"
+    }
+  },
+  "files": ["dist"],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup src/index.ts src/plugins.ts --format cjs,esm --dts --out-dir dist --clean",
+    "dev":   "tsup src/index.ts src/plugins.ts --format cjs,esm --dts --out-dir dist --watch"
+  },
+  "devDependencies": {
+    "tsup": "^8",
+    "typescript": "^5"
+  }
+}
