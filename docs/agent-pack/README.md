@@ -12,3 +12,7 @@ Urutan baca:
 7. `07_FASE5_TASKS.md`
 8. `08_VALIDASI.md`
 9. `09_SEND_TO_AGENT.md`
+10. `10_FASE6_TASKS.md`
+11. `11_FASE7_TASKS.md`
+12. `12_FASE8_TASKS.md`
+13. `13_FASE9_TASKS.md`
