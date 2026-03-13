@@ -46,6 +46,8 @@ export default defineConfig({
     // Internal workspace packages — sudah di-bundle langsung dari src,
     // tapi kalau ada import antar-package di runtime harus external
     "@tailwind-styled/compiler",
+    "@tailwind-styled/engine",
+    "@tailwind-styled/scanner",
     "@tailwind-styled/plugin",
     "@tailwind-styled/animate",
     "@tailwind-styled/devtools",

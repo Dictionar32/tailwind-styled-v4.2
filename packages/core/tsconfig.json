@@ -10,7 +10,11 @@
       "@tailwind-styled/animate": ["../animate/src/index.ts"],
       "@tailwind-styled/animate/*": ["../animate/src/*"],
       "@tailwind-styled/compiler": ["../compiler/src/index.ts"],
-      "@tailwind-styled/compiler/*": ["../compiler/src/*"]
+      "@tailwind-styled/compiler/*": ["../compiler/src/*"],
+      "@tailwind-styled/engine": ["../engine/src/index.ts"],
+      "@tailwind-styled/engine/*": ["../engine/src/*"],
+      "@tailwind-styled/scanner": ["../scanner/src/index.ts"],
+      "@tailwind-styled/scanner/*": ["../scanner/src/*"]
     }
   },
   "include": ["src"],
