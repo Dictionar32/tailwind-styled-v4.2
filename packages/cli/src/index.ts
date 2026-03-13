@@ -12,6 +12,9 @@
 
 import { runAnalyzeCli } from "./analyze"
 import { runExtractCli } from "./extract"
+import { runInitCli } from "./init"
+import { runMigrateCli } from "./migrate"
+import { runScanCli } from "./scan"
 import { runStatsCli } from "./stats"
 
 const args = process.argv.slice(2)
@@ -23,6 +26,10 @@ tailwind-styled-v4 CLI
 
 Commands:
   create [name]            Scaffold a new project
+  init [dir]               Initialize Tailwind v4 CSS-first files
+  scan [dir]               Scan workspace and summarize Tailwind classes
+  migrate [dir]            Apply basic migration transforms to v4
+  migrate [dir] --dry-run  Preview migration without writing files
   analyze [dir]            CSS usage analyzer — duplicates, unused variants
   stats [dir]              Bundle size breakdown by component and file
   extract [dir]            Detect repeated patterns, suggest shared components
@@ -31,9 +38,12 @@ Commands:
 Flags:
   --json                   Output results as JSON
   --write                  (extract only) Write suggestions to file
+  --dry-run                (migrate only) Preview without file writes
 
 Examples:
-  npx tailwind-styled create my-app
+  npx tailwind-styled init
+  npx tailwind-styled scan ./src
+  npx tailwind-styled migrate ./src --dry-run
   npx tailwind-styled analyze ./src
   npx tailwind-styled stats ./src --json
   npx tailwind-styled extract ./src --write
@@ -42,6 +52,15 @@ Examples:
 switch (command) {
   case "create":
     import("./createApp").then((m) => m.main?.())
+    break
+  case "init":
+    runInitCli(restArgs)
+    break
+  case "scan":
+    runScanCli(restArgs)
+    break
+  case "migrate":
+    runMigrateCli(restArgs)
     break
   case "analyze":
     runAnalyzeCli(restArgs)
