@@ -17,7 +17,9 @@
     "check": "biome check",
     "build:stage1": "npm run build -w packages/animate -w packages/theme -w packages/plugin -w packages/preset -w packages/compiler -w packages/scanner -w packages/engine -w packages/cli -w packages/devtools -w packages/runtime-css -w packages/vite -w packages/rspack",
     "build:stage2": "npm run build -w packages/next -w packages/core",
-    "roadmap:build": "node scripts/roadmap/build-mermaid.mjs"
+    "roadmap:build": "node scripts/roadmap/build-mermaid.mjs",
+    "bench:native": "node benchmarks/native-parser-bench.mjs",
+    "release:alpha:check": "npm run build:packages && npm run test --workspaces --if-present"
   },
   "engines": {
     "node": ">=18"
