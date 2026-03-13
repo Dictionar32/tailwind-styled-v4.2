@@ -1,8 +1,8 @@
 # Agent Pack
 
-Dokumen ini adalah paket instruksi siap kirim ke AI Agent untuk eksekusi upgrade tailwind-styled-v4 ke kompatibilitas Tailwind CSS v4.
+Dokumen ini adalah paket instruksi siap kirim ke AI Agent untuk eksekusi upgrade `tailwind-styled-v4` ke kompatibilitas Tailwind CSS v4.
 
-Urutan baca:
+## Urutan baca per fase
 1. `01_START_HERE.md`
 2. `02_FASE0_TASKS.md`
 3. `03_FASE1_TASKS.md`
@@ -12,8 +12,11 @@ Urutan baca:
 7. `07_FASE5_TASKS.md`
 8. `08_VALIDASI.md`
 9. `09_SEND_TO_AGENT.md`
-
 10. `10_FASE6_TASKS.md`
 11. `11_FASE7_TASKS.md`
 12. `12_FASE8_TASKS.md`
 13. `13_FASE9_TASKS.md`
+
+## Catatan integrasi cabang
+- Fase 8-9 terintegrasi pada dokumen `12_FASE8_TASKS.md` dan `13_FASE9_TASKS.md`.
+- Saat update dari branch lain, prioritaskan merge berurutan pada file metadata yang sering konflik: `package.json`, `packages/engine/tsconfig.json`, dan `packages/scanner/tsconfig.json`.

@@ -2,7 +2,7 @@
   "name": "tailwind-styled-v4-monorepo",
   "version": "2.0.0",
   "private": true,
-  "description": "Monorepo for tailwind-styled-v4 \u2014 compiler-driven, RSC-aware styling",
+  "description": "Monorepo for tailwind-styled-v4 — compiler-driven, RSC-aware styling",
   "workspaces": [
     "packages/*",
     "examples/*"
@@ -22,7 +22,8 @@
     "release:alpha:check": "npm run build:packages && npm run test --workspaces --if-present",
     "validate:final": "node scripts/validate/final-report.mjs",
     "health:summary": "node scripts/validate/health-summary.mjs",
-    "release:rc:check": "npm run validate:final && npm run health:summary"
+    "release:rc:check": "npm run validate:final && npm run health:summary",
+    "merge:phase8-9:hint": "echo \"If GitHub shows conflicts, resolve package.json + engine/scanner tsconfig first, then rerun validate:final and health:summary\""
   },
   "engines": {
     "node": ">=18"
