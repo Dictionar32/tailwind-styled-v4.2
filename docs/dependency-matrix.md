@@ -119,3 +119,4 @@ Sumber: `packages/scanner/package.json`
    - dependency di manifest package terkait, atau
    - isi `docs/dependency-matrix.md` dan `scripts/validate/dependency-matrix-check.mjs`.
 3. Untuk readiness rilis, lanjutkan dengan `npm run validate:final` dan `npm run health:summary`.
+4. Untuk konteks review PR #5 (status aktual vs proposal lanjutan), lihat `docs/ops/pr5-review-response.md`.
