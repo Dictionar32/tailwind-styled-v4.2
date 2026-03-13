@@ -1,0 +1,9 @@
+{
+  "name": "example-simple",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "node src/dev.js",
+    "build": "node src/build.js"
+  }
+}

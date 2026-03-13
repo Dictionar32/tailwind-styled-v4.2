@@ -1,0 +1,25 @@
+name: benchmark
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  scanner-benchmark:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Run incremental benchmark baseline with thresholds
+        env:
+          BENCH_MAX_FULL_SCAN_MS: "300"
+          BENCH_MAX_INCREMENTAL_MS: "120"
+          BENCH_OUTPUT_FILE: artifacts/benchmark-incremental.json
+        run: node scripts/benchmark/incremental.js
+      - name: Upload benchmark artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-incremental
+          path: artifacts/benchmark-incremental.json
