@@ -1,5 +1,22 @@
 # Changelog
 
+## v2.1.0-alpha.1 — Tailwind v4 Upgrade Path
+
+### Added
+
+- New workspace packages: `@tailwind-styled/scanner` and `@tailwind-styled/engine`.
+- Core Tailwind v4 helpers: parser, CSS-first theme reader, merge layer, styled resolver.
+- CLI phase upgrades: `init`, `scan`, `migrate`, and interactive `migrate --wizard`.
+- Vite plugin build-end integration with scanner reports and optional engine build call.
+- Native parser scaffold (`native/`) plus benchmark script (`benchmarks/native-parser-bench.mjs`).
+- Release workflow/docs scaffold: `.github/workflows/publish-alpha.yml`, `RELEASE.md`, `ANNOUNCEMENT.md`.
+
+### Notes
+
+- Native parser remains optional and uses fallback strategy until binding is shipped in CI artifacts.
+
+---
+
 ## v2.0.0 — Major Upgrade (Compiler-Driven)
 
 ### Breaking Changes

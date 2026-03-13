@@ -2,7 +2,7 @@
   "name": "tailwind-styled-v4-monorepo",
   "version": "2.0.0",
   "private": true,
-  "description": "Monorepo for tailwind-styled-v4 \u2014 compiler-driven, RSC-aware styling",
+  "description": "Monorepo for tailwind-styled-v4 — compiler-driven, RSC-aware styling",
   "workspaces": [
     "packages/*",
     "examples/*"
@@ -17,7 +17,12 @@
     "check": "biome check",
     "build:stage1": "npm run build -w packages/animate -w packages/theme -w packages/plugin -w packages/preset -w packages/compiler -w packages/scanner -w packages/engine -w packages/cli -w packages/devtools -w packages/runtime-css -w packages/vite -w packages/rspack",
     "build:stage2": "npm run build -w packages/next -w packages/core",
-    "roadmap:build": "node scripts/roadmap/build-mermaid.mjs"
+    "roadmap:build": "node scripts/roadmap/build-mermaid.mjs",
+    "bench:native": "node benchmarks/native-parser-bench.mjs",
+    "release:alpha:check": "npm run build:packages && npm run test --workspaces --if-present",
+    "validate:final": "node scripts/validate/final-report.mjs",
+    "health:summary": "node scripts/validate/health-summary.mjs",
+    "release:rc:check": "npm run validate:final && npm run health:summary"
   },
   "engines": {
     "node": ">=18"

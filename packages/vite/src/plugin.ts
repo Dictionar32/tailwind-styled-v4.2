@@ -8,9 +8,13 @@
  *   })
  */
 
+import fs from "node:fs"
 import path from "node:path"
+
 import type { TransformOptions } from "@tailwind-styled/compiler"
 import { generateSafelist, shouldProcess, transformSource } from "@tailwind-styled/compiler"
+import { createEngine } from "@tailwind-styled/engine"
+import { scanWorkspace } from "@tailwind-styled/scanner"
 
 export interface VitePluginOptions extends TransformOptions {
   include?: RegExp
@@ -18,6 +22,10 @@ export interface VitePluginOptions extends TransformOptions {
   scanDirs?: string[]
   safelistOutput?: string
   generateSafelist?: boolean
+  /** Emit scanner summary JSON in build mode. */
+  scanReportOutput?: string
+  /** Run unified engine.build() at build end (compileCss disabled by default). */
+  useEngineBuild?: boolean
 }
 
 export function tailwindStyledPlugin(opts: VitePluginOptions = {}): any {
@@ -26,7 +34,9 @@ export function tailwindStyledPlugin(opts: VitePluginOptions = {}): any {
     exclude = /node_modules/,
     scanDirs = ["src"],
     safelistOutput = ".tailwind-styled-safelist.json",
+    scanReportOutput = ".tailwind-styled-scan-report.json",
     generateSafelist: doSafelist = true,
+    useEngineBuild = true,
     ...transformOpts
   } = opts
 
@@ -59,17 +69,47 @@ export function tailwindStyledPlugin(opts: VitePluginOptions = {}): any {
       return { code: result.code, map: null }
     },
 
-    buildEnd() {
-      if (!doSafelist || isDev) return
+    async buildEnd() {
+      if (isDev) return
+
+      if (doSafelist) {
+        try {
+          generateSafelist(
+            scanDirs.map((d) => path.resolve(root, d)),
+            path.resolve(root, safelistOutput),
+            root
+          )
+        } catch (e) {
+          console.warn("[tailwind-styled-v4] Safelist generation failed:", e)
+        }
+      }
 
       try {
-        generateSafelist(
-          scanDirs.map((d) => path.resolve(root, d)),
-          path.resolve(root, safelistOutput),
-          root
+        const report = scanWorkspace(root)
+        const reportPath = path.resolve(root, scanReportOutput)
+        fs.writeFileSync(
+          reportPath,
+          JSON.stringify(
+            {
+              root,
+              totalFiles: report.totalFiles,
+              uniqueClassCount: report.uniqueClasses.length,
+            },
+            null,
+            2
+          ) + "\n"
         )
       } catch (e) {
-        console.warn("[tailwind-styled-v4] Safelist generation failed:", e)
+        console.warn("[tailwind-styled-v4] Scan report generation failed:", e)
+      }
+
+      if (useEngineBuild) {
+        try {
+          const engine = await createEngine({ root, compileCss: false })
+          await engine.build()
+        } catch (e) {
+          console.warn("[tailwind-styled-v4] Engine build step failed:", e)
+        }
       }
     },
 
