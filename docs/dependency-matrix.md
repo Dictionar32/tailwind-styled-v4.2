@@ -90,3 +90,22 @@ Sumber: `packages/scanner/package.json`
 - Untuk validasi readiness rilis, gunakan:
   - `npm run validate:final`
   - `npm run health:summary`
+
+## Status Implementasi (Diverifikasi dari Source)
+
+### CLI (`packages/cli`)
+- **Sudah implementasi**, bukan skeleton: command router untuk `init`, `scan`, `migrate`, `analyze`, `stats`, `extract` aktif di `src/index.ts`.
+- `scan` sudah memanggil scanner dan bisa output JSON/top classes.
+- `migrate` + `--wizard` sudah berjalan via `readline/promises` (tanpa dependency eksternal `commander`/`inquirer`).
+
+### Scanner (`packages/scanner`)
+- **Sudah implementasi** traversal workspace rekursif, filter extension, ignore dirs, scan file, dan agregasi unique class.
+- Implementasi memakai Node `fs/path` + `extractAllClasses` dari compiler, **bukan** `fast-glob`.
+
+### Engine (`packages/engine`)
+- **Sudah implementasi** `createEngine()`, `scan()`, dan `build()` untuk alur scan → merge class → optional compile CSS.
+- Integrasi dilakukan lewat `@tailwind-styled/compiler` + `@tailwind-styled/scanner`, sehingga tidak perlu dependency `postcss/tailwindcss` langsung di package engine.
+
+### Catatan
+- Ketidakhadiran package seperti `commander`, `@inquirer/prompts`, `picocolors`, `fast-glob` adalah keputusan implementasi saat ini, bukan bukti fitur belum ada.
+
