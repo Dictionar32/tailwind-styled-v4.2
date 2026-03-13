@@ -103,9 +103,10 @@ Sumber: `packages/scanner/package.json`
 ### Scanner (`packages/scanner`)
 - **Sudah implementasi** traversal workspace rekursif, filter extension, ignore dirs, scan file, dan agregasi unique class.
 - Implementasi memakai Node `fs/path` + `extractAllClasses` dari compiler, **bukan** `fast-glob`.
+- Scanner punya cache file-based default di `.cache/tailwind-styled/scanner-cache.json`.
 
 ### Engine (`packages/engine`)
-- **Sudah implementasi** `createEngine()`, `scan()`, dan `build()` untuk alur scan → merge class → optional compile CSS.
+- **Sudah implementasi** `createEngine()`, `scan()`, `build()`, dan `watch()` (initial/change/unlink) untuk alur scan → merge class → optional compile CSS.
 - Integrasi dilakukan lewat `@tailwind-styled/compiler` + `@tailwind-styled/scanner`, sehingga tidak perlu dependency `postcss/tailwindcss` langsung di package engine.
 
 ### Catatan

@@ -12,11 +12,13 @@ Dokumen ini merespons feedback teknis reviewer untuk PR #5, dengan fokus pada:
 - Filtering extension + ignore dirs sudah ada.
 - Ekstraksi class sudah jalan via `@tailwind-styled/compiler` (`extractAllClasses`).
 - Implementasi saat ini menggunakan Node `fs/path` (tanpa `fast-glob`).
+- Cache scanner file-based (`.cache/tailwind-styled/scanner-cache.json`) sudah aktif.
 
 ### Engine
 - `createEngine()` sudah tersedia.
 - `scan()` sudah tersedia.
 - `build()` sudah tersedia untuk alur scan → merge class → optional CSS compile.
+- `watch()` sudah tersedia untuk event `initial/change/unlink` dengan incremental update + fallback full rescan.
 
 ### CLI
 - Command aktif: `init`, `scan`, `migrate`, `migrate --wizard`, `analyze`, `stats`, `extract`.
@@ -44,9 +46,9 @@ Dokumen ini merespons feedback teknis reviewer untuk PR #5, dengan fokus pada:
 3. Tambah laporan performa scanner pada validasi CI.
 
 ### P2 — Incremental DX
-1. Tambah watch mode pada engine (incremental rebuild flow).
-2. Tambah cache metadata scan (`.cache/tailwind-styled`) dengan hash/mtime.
-3. Tambah invalidation strategy per-file.
+1. Hardening watch mode untuk edge-case rename/symlink/large workspace.
+2. Penyempurnaan invalidation strategy per-file + observability metric.
+3. Tambah benchmark incremental resmi ke pipeline validasi.
 
 ### P3 — Analyzer Layer (Project-Aware)
 1. Tambah package `@tailwind-styled/analyzer` (proposal).
