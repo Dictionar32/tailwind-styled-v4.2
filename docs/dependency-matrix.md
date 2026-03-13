@@ -90,6 +90,8 @@ Sumber: `packages/scanner/package.json`
 - Untuk validasi readiness rilis, gunakan:
   - `npm run validate:final`
   - `npm run health:summary`
+- Untuk validasi konsistensi dependency matrix vs manifest, gunakan:
+  - `npm run validate:deps`
 
 ## Status Implementasi (Diverifikasi dari Source)
 
@@ -109,3 +111,11 @@ Sumber: `packages/scanner/package.json`
 ### Catatan
 - Ketidakhadiran package seperti `commander`, `@inquirer/prompts`, `picocolors`, `fast-glob` adalah keputusan implementasi saat ini, bukan bukti fitur belum ada.
 
+
+## Cara Menggunakan Dependency Matrix
+
+1. Jalankan `npm run validate:deps` sebelum membuat PR untuk memastikan daftar dependency di dokumen ini masih sinkron dengan `package.json` setiap package.
+2. Jika command gagal, update salah satu dari dua sisi berikut:
+   - dependency di manifest package terkait, atau
+   - isi `docs/dependency-matrix.md` dan `scripts/validate/dependency-matrix-check.mjs`.
+3. Untuk readiness rilis, lanjutkan dengan `npm run validate:final` dan `npm run health:summary`.
