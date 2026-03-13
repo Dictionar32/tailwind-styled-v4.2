@@ -28,6 +28,9 @@ Dokumen ini merespons feedback teknis reviewer untuk PR #5, dengan fokus pada:
 - Validasi final: `npm run validate:final`.
 - Ringkasan health: `npm run health:summary`.
 - Konsistensi dependency matrix: `npm run validate:deps`.
+- Audit gap PR #5 (AST parser, benchmark CI, fixture besar, API docs, examples): `npm run validate:pr5:gaps`.
+- Audit gap sekarang memeriksa kualitas minimum (bukan sekadar keberadaan file).
+- Hasil audit gap ditulis ke artifact `artifacts/pr5-gap-check.json` untuk referensi cepat reviewer.
 
 ## 2) Keputusan Desain Saat Ini (Disengaja)
 
@@ -41,9 +44,9 @@ Dokumen ini merespons feedback teknis reviewer untuk PR #5, dengan fokus pada:
 ## 3) Gap yang Diakui & Backlog Prioritas
 
 ### P1 — Scanner Hardening
-1. Tambah mode scanning berbasis glob teroptimasi (opsional, benchmark-driven).
-2. Tambah fixture untuk file besar dan edge-case template literal.
-3. Tambah laporan performa scanner pada validasi CI.
+1. AST extraction JSX/TSX sudah dipindah ke parser berbasis TypeScript AST (bukan regex murni).
+2. Fixture besar memiliki generator + sampel berkas yang di-commit untuk validasi cepat.
+3. Benchmark CI sudah memakai threshold environment dan upload artifact hasil benchmark.
 
 ### P2 — Incremental DX
 1. Hardening watch mode untuk edge-case rename/symlink/large workspace.

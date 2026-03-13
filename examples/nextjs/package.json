@@ -1,0 +1,17 @@
+{
+  "name": "example-nextjs",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "test": "node -e \"const fs=require('fs');['app/layout.tsx','app/page.tsx','components/card.tsx'].forEach(p=>{if(!fs.existsSync(p)) throw new Error('missing '+p)});console.log('nextjs example files ok')\""
+  },
+  "dependencies": {
+    "next": "15.0.0",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "tailwind-styled-v4": "*"
+  }
+}

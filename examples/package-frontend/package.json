@@ -1,0 +1,14 @@
+{
+  "name": "example-package-frontend",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./src/index.ts",
+  "scripts": {
+    "check": "node ./src/smoke.js",
+    "test": "node ./src/smoke.js"
+  },
+  "dependencies": {
+    "tailwind-styled-v4": "*"
+  }
+}
