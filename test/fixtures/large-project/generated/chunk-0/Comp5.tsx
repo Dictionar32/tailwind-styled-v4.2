@@ -1,0 +1,1 @@
+export const Comp5=({active,color})=> <div className={active ? "bg-blue-500 text-white" : `bg-${color}-500 text-black`}>5</div>;

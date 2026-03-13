@@ -4,6 +4,7 @@ import path from "node:path"
 import { extractAllClasses } from "@tailwind-styled/compiler"
 
 import { ScanCache } from "./cache"
+import { parseJsxLikeClasses } from "./ast-parser"
 
 export interface ScanWorkspaceOptions {
   includeExtensions?: string[]
@@ -27,7 +28,15 @@ export const DEFAULT_EXTENSIONS = [".js", ".jsx", ".ts", ".tsx", ".mjs", ".cjs"]
 export const DEFAULT_IGNORES = ["node_modules", ".git", ".next", "dist", "out", ".turbo", ".cache"]
 
 export function scanSource(source: string): string[] {
-  return extractAllClasses(source)
+  const baseClasses = extractAllClasses(source)
+  let jsxClasses: string[] = []
+  try {
+    jsxClasses = parseJsxLikeClasses(source)
+  } catch {
+    jsxClasses = []
+  }
+
+  return Array.from(new Set([...baseClasses, ...jsxClasses]))
 }
 
 export function isScannableFile(filePath: string, includeExtensions = DEFAULT_EXTENSIONS): boolean {
