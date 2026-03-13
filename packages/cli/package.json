@@ -12,8 +12,8 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup src/createApp.ts src/index.ts src/analyze.ts src/stats.ts src/extract.ts src/init.ts src/scan.ts src/migrate.ts --format esm --dts --out-dir dist --clean",
-    "dev": "tsup src/createApp.ts src/index.ts src/analyze.ts src/stats.ts src/extract.ts src/init.ts src/scan.ts src/migrate.ts --format esm --dts --out-dir dist --watch"
+    "build": "tsup src/createApp.ts src/index.ts src/analyze.ts src/stats.ts src/extract.ts src/init.ts src/scan.ts src/migrate.ts src/migrateWizard.ts --format esm --dts --out-dir dist --clean",
+    "dev": "tsup src/createApp.ts src/index.ts src/analyze.ts src/stats.ts src/extract.ts src/init.ts src/scan.ts src/migrate.ts src/migrateWizard.ts --format esm --dts --out-dir dist --watch"
   },
   "engines": {
     "node": ">=18"

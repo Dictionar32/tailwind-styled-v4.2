@@ -39,11 +39,13 @@ Flags:
   --json                   Output results as JSON
   --write                  (extract only) Write suggestions to file
   --dry-run                (migrate only) Preview without file writes
+  --wizard                 (migrate only) Interactive migration options
 
 Examples:
   npx tailwind-styled init
   npx tailwind-styled scan ./src
   npx tailwind-styled migrate ./src --dry-run
+  npx tailwind-styled migrate ./src --wizard
   npx tailwind-styled analyze ./src
   npx tailwind-styled stats ./src --json
   npx tailwind-styled extract ./src --write
@@ -60,7 +62,10 @@ switch (command) {
     runScanCli(restArgs)
     break
   case "migrate":
-    runMigrateCli(restArgs)
+    runMigrateCli(restArgs).catch((err) => {
+      console.error("Migration failed:", err)
+      process.exit(1)
+    })
     break
   case "analyze":
     runAnalyzeCli(restArgs)

@@ -1,7 +1,7 @@
 {
   "name": "@tailwind-styled/vite",
   "version": "2.0.0",
-  "description": "Vite plugin for tailwind-styled-v4 — compile-time transform, safelist generation",
+  "description": "Vite plugin for tailwind-styled-v4 \u2014 compile-time transform, safelist generation",
   "license": "MIT",
   "type": "module",
   "main": "./dist/plugin.cjs",
@@ -9,18 +9,22 @@
   "types": "./dist/plugin.d.ts",
   "exports": {
     ".": {
-      "types":   "./dist/plugin.d.ts",
-      "import":  "./dist/plugin.js",
+      "types": "./dist/plugin.d.ts",
+      "import": "./dist/plugin.js",
       "require": "./dist/plugin.cjs"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
-    "dev":   "tsup --watch"
+    "dev": "tsup --watch"
   },
   "dependencies": {
-    "@tailwind-styled/compiler": "2.0.0"
+    "@tailwind-styled/compiler": "2.0.0",
+    "@tailwind-styled/engine": "*",
+    "@tailwind-styled/scanner": "*"
   },
   "peerDependencies": {
     "vite": ">=5"
