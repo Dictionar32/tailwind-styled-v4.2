@@ -55,6 +55,19 @@ export type { ResolvedThemeTokens, ThemeTokenMap } from "./twTheme"
 // ── Tailwind v4 CSS Variables ─────────────────────────────────────────────────
 export { createTheme, cssVar, t, twVar, v4Tokens } from "./twTheme"
 
+
+export type { ParsedClass, ParsedClassModifier } from "./parser"
+// ── Tailwind v4 class parser ────────────────────────────────────────────────
+export { parseClassToken, parseTailwindClasses, splitClassList } from "./parser"
+export type { ThemeConfig } from "./themeReader"
+// ── CSS-first theme reader ──────────────────────────────────────────────────
+export {
+  clearThemeReaderCache,
+  extractThemeFromCSS,
+  generateTypeDefinitions,
+  resolveThemeValue,
+} from "./themeReader"
+
 // ── Types ─────────────────────────────────────────────────────────────────────
 export type {
   ComponentConfig,
