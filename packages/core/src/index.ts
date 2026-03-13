@@ -17,6 +17,8 @@ export {
 export { createComponent } from "./createComponent"
 export { cv } from "./cv"
 export { cn, cx, cxm } from "./cx"
+export type { MergeOptions } from "./merge"
+export { createTwMerge, mergeWithRules, twMerge } from "./merge"
 export type { LiveTokenSet, TokenMap, TokenSubscriber } from "./liveTokenEngine"
 // ── Live Token Engine ─────────────────────────────────────────────────────────
 export {
@@ -49,11 +51,26 @@ export type {
 } from "./styledSystem"
 // ── Design System Factory ─────────────────────────────────────────────────────
 export { createStyledSystem } from "./styledSystem"
+export type { StyledOptions, StyledProps } from "./styled"
+export { resolveStyledClassName, styled } from "./styled"
 // ── Core ──────────────────────────────────────────────────────────────────────
 export { server, tw } from "./twProxy"
 export type { ResolvedThemeTokens, ThemeTokenMap } from "./twTheme"
 // ── Tailwind v4 CSS Variables ─────────────────────────────────────────────────
 export { createTheme, cssVar, t, twVar, v4Tokens } from "./twTheme"
+
+
+export type { ParsedClass, ParsedClassModifier } from "./parser"
+// ── Tailwind v4 class parser ────────────────────────────────────────────────
+export { parseClassToken, parseTailwindClasses, splitClassList } from "./parser"
+export type { ThemeConfig } from "./themeReader"
+// ── CSS-first theme reader ──────────────────────────────────────────────────
+export {
+  clearThemeReaderCache,
+  extractThemeFromCSS,
+  generateTypeDefinitions,
+  resolveThemeValue,
+} from "./themeReader"
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 export type {
