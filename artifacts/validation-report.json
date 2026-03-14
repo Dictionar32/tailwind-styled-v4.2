@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-14T13:19:04.366Z",
+  "generatedAt": "2026-03-14T13:34:42.910Z",
   "checks": {
     "coreTest": {
       "ok": true,
@@ -7,19 +7,19 @@
     },
     "buildCompiler": {
       "ok": true,
-      "outputPreview": "> @tailwind-styled/compiler@2.0.0 build\n> tsup src/index.ts --format cjs,esm --dts --out-dir dist --clean\n\n\u001b[34mCLI\u001b[39m Building entry: src/index.ts\n\u001b[34mCLI\u001b[39m Using tsconfig: tsconfig.json\n\u001b[34mCLI\u001b[39m tsup v8.5.1\n\u001b[34mCLI\u001b[39m Target: es2017\n\u001b[34mCLI\u001b[39m Cleaning output folder\n\u001b[34mCJS\u001b[39m Build start\n\u001b[34mESM\u001b[39m Build start\n\u001b[32mCJS\u001b[39m \u001b[1mdist\\index.cjs \u001b[22m\u001b[32m128.97 KB\u001b[39m\n\u001b[32mCJS\u001b[39m ⚡️ Build success in 260ms\n\u001b[32mESM\u001b[39m \u001b[1mdist\\index.js \u001b[22m\u001b[32m124.67 KB\u001b[39m\n\u001b[32mESM\u001b[39m ⚡️ Build success in 262ms\n\u001b[34mDTS\u001b[39m Build start\n\u001b[32mDTS\u001b[39m ⚡️ Build success in 5783ms\n"
+      "outputPreview": "> @tailwind-styled/compiler@2.0.0 build\n> tsup src/index.ts --format cjs,esm --dts --out-dir dist --clean\n\n\u001b[34mCLI\u001b[39m Building entry: src/index.ts\n\u001b[34mCLI\u001b[39m Using tsconfig: tsconfig.json\n\u001b[34mCLI\u001b[39m tsup v8.5.1\n\u001b[34mCLI\u001b[39m Target: es2017\n\u001b[34mCLI\u001b[39m Cleaning output folder\n\u001b[34mCJS\u001b[39m Build start\n\u001b[34mESM\u001b[39m Build start\n\u001b[32mCJS\u001b[39m \u001b[1mdist\\index.cjs \u001b[22m\u001b[32m128.97 KB\u001b[39m\n\u001b[32mCJS\u001b[39m ⚡️ Build success in 117ms\n\u001b[32mESM\u001b[39m \u001b[1mdist\\index.js \u001b[22m\u001b[32m124.67 KB\u001b[39m\n\u001b[32mESM\u001b[39m ⚡️ Build success in 118ms\n\u001b[34mDTS\u001b[39m Build start\n\u001b[32mDTS\u001b[39m ⚡️ Build success in 3179ms\n"
     },
     "buildScanner": {
       "ok": true,
-      "outputPreview": "> @tailwind-styled/scanner@2.0.0 build\n> tsup src/index.ts --format cjs,esm --dts --out-dir dist --clean\n\n\u001b[34mCLI\u001b[39m Building entry: src/index.ts\n\u001b[34mCLI\u001b[39m Using tsconfig: tsconfig.json\n\u001b[34mCLI\u001b[39m tsup v8.5.1\n\u001b[34mCLI\u001b[39m Target: es2017\n\u001b[34mCLI\u001b[39m Cleaning output folder\n\u001b[34mCJS\u001b[39m Build start\n\u001b[34mESM\u001b[39m Build start\n\u001b[34mDTS\u001b[39m Build start\n\u001b[32mCJS\u001b[39m \u001b[1mdist\\index.cjs \u001b[22m\u001b[32m9.59 MB\u001b[39m\n\u001b[32mCJS\u001b[39m ⚡️ Build success in 3094ms\n\u001b[32mESM\u001b[39m \u001b[1mdist\\index.js \u001b[22m\u001b[32m9.59 MB\u001b[39m\n\u001b[32mESM\u001b[39m ⚡️ Build success in 3096ms\n\u001b[32mDTS\u001b[39m ⚡️ Build success in 4756ms\n\u001b[3"
+      "outputPreview": "> @tailwind-styled/scanner@2.0.0 build\n> tsup src/index.ts --format cjs,esm --dts --out-dir dist --clean\n\n\u001b[34mCLI\u001b[39m Building entry: src/index.ts\n\u001b[34mCLI\u001b[39m Using tsconfig: tsconfig.json\n\u001b[34mCLI\u001b[39m tsup v8.5.1\n\u001b[34mCLI\u001b[39m Target: es2017\n\u001b[34mCLI\u001b[39m Cleaning output folder\n\u001b[34mCJS\u001b[39m Build start\n\u001b[34mESM\u001b[39m Build start\n\u001b[34mDTS\u001b[39m Build start\n\u001b[32mCJS\u001b[39m \u001b[1mdist\\index.cjs \u001b[22m\u001b[32m9.59 MB\u001b[39m\n\u001b[32mCJS\u001b[39m ⚡️ Build success in 993ms\n\u001b[32mESM\u001b[39m \u001b[1mdist\\index.js \u001b[22m\u001b[32m9.59 MB\u001b[39m\n\u001b[32mESM\u001b[39m ⚡️ Build success in 1083ms\n\u001b[32mDTS\u001b[39m ⚡️ Build success in 4954ms\n\u001b[32"
     },
     "buildEngine": {
       "ok": true,
-      "outputPreview": "> @tailwind-styled/engine@2.0.0 build\n> tsup src/index.ts --format cjs,esm --dts --out-dir dist --clean\n\n\u001b[34mCLI\u001b[39m Building entry: src/index.ts\n\u001b[34mCLI\u001b[39m Using tsconfig: tsconfig.json\n\u001b[34mCLI\u001b[39m tsup v8.5.1\n\u001b[34mCLI\u001b[39m Target: es2017\n\u001b[34mCLI\u001b[39m Cleaning output folder\n\u001b[34mCJS\u001b[39m Build start\n\u001b[34mESM\u001b[39m Build start\n\u001b[32mCJS\u001b[39m \u001b[1mdist\\index.cjs \u001b[22m\u001b[32m6.78 KB\u001b[39m\n\u001b[32mCJS\u001b[39m ⚡️ Build success in 101ms\n\u001b[32mESM\u001b[39m \u001b[1mdist\\index.js \u001b[22m\u001b[32m4.71 KB\u001b[39m\n\u001b[32mESM\u001b[39m ⚡️ Build success in 102ms\n\u001b[34mDTS\u001b[39m Build start\n\u001b[32mDTS\u001b[39m ⚡️ Build success in 3438ms\n\u001b[32mD"
+      "outputPreview": "> @tailwind-styled/engine@2.0.0 build\n> tsup src/index.ts --format cjs,esm --dts --out-dir dist --clean\n\n\u001b[34mCLI\u001b[39m Building entry: src/index.ts\n\u001b[34mCLI\u001b[39m Using tsconfig: tsconfig.json\n\u001b[34mCLI\u001b[39m tsup v8.5.1\n\u001b[34mCLI\u001b[39m Target: es2017\n\u001b[34mCLI\u001b[39m Cleaning output folder\n\u001b[34mCJS\u001b[39m Build start\n\u001b[34mESM\u001b[39m Build start\n\u001b[32mESM\u001b[39m \u001b[1mdist\\index.js \u001b[22m\u001b[32m4.71 KB\u001b[39m\n\u001b[32mESM\u001b[39m ⚡️ Build success in 53ms\n\u001b[32mCJS\u001b[39m \u001b[1mdist\\index.cjs \u001b[22m\u001b[32m6.78 KB\u001b[39m\n\u001b[32mCJS\u001b[39m ⚡️ Build success in 54ms\n\u001b[34mDTS\u001b[39m Build start\n\u001b[32mDTS\u001b[39m ⚡️ Build success in 3577ms\n\u001b[32mDTS"
     },
     "buildVite": {
       "ok": true,
-      "outputPreview": "> @tailwind-styled/vite@2.0.0 build\n> tsup\n\n\u001b[34mCLI\u001b[39m Building entry: {\"plugin\":\"src/plugin.ts\"}\n\u001b[34mCLI\u001b[39m Using tsconfig: tsconfig.json\n\u001b[34mCLI\u001b[39m tsup v8.5.1\n\u001b[34mCLI\u001b[39m Using tsup config: C:\\Users\\User\\Desktop\\test1\\tailwind-styled-v4.2\\packages\\vite\\tsup.config.ts\n\u001b[34mCLI\u001b[39m Target: es2017\n\u001b[34mCLI\u001b[39m Cleaning output folder\n\u001b[34mCJS\u001b[39m Build start\n\u001b[34mESM\u001b[39m Build start\n\u001b[32mESM\u001b[39m \u001b[1mdist\\plugin.js \u001b[22m\u001b[32m4.24 KB\u001b[39m\n\u001b[32mESM\u001b[39m ⚡️ Build success in 27ms\n\u001b[32mCJS\u001b[39m \u001b[1mdist\\plugin.cjs \u001b[22m\u001b[32m5.96 KB\u001b[39m\n\u001b[32mCJS\u001b[39m ⚡️ Build success in 27ms\n\u001b[34mDTS\u001b"
+      "outputPreview": "> @tailwind-styled/vite@2.0.0 build\n> tsup\n\n\u001b[34mCLI\u001b[39m Building entry: {\"plugin\":\"src/plugin.ts\"}\n\u001b[34mCLI\u001b[39m Using tsconfig: tsconfig.json\n\u001b[34mCLI\u001b[39m tsup v8.5.1\n\u001b[34mCLI\u001b[39m Using tsup config: C:\\Users\\User\\Desktop\\test1\\tailwind-styled-v4.2\\packages\\vite\\tsup.config.ts\n\u001b[34mCLI\u001b[39m Target: es2017\n\u001b[34mCLI\u001b[39m Cleaning output folder\n\u001b[34mCJS\u001b[39m Build start\n\u001b[34mESM\u001b[39m Build start\n\u001b[32mESM\u001b[39m \u001b[1mdist\\plugin.js \u001b[22m\u001b[32m4.24 KB\u001b[39m\n\u001b[32mESM\u001b[39m ⚡️ Build success in 41ms\n\u001b[32mCJS\u001b[39m \u001b[1mdist\\plugin.cjs \u001b[22m\u001b[32m5.96 KB\u001b[39m\n\u001b[32mCJS\u001b[39m ⚡️ Build success in 42ms\n\u001b[34mDTS\u001b"
     },
     "buildCli": {
       "ok": true,
@@ -27,7 +27,7 @@
     },
     "benchNative": {
       "ok": true,
-      "outputPreview": "> tailwind-styled-v4-monorepo@2.0.0 bench:native\n> node benchmarks/native-parser-bench.mjs\n\n{\n  \"count\": 5000,\n  \"js\": {\n    \"label\": \"js\",\n    \"ms\": 54.39\n  },\n  \"native\": null,\n  \"speedup\": null\n}"
+      "outputPreview": "> tailwind-styled-v4-monorepo@2.0.0 bench:native\n> node benchmarks/native-parser-bench.mjs\n\n{\n  \"count\": 5000,\n  \"js\": {\n    \"label\": \"js\",\n    \"ms\": 53.15\n  },\n  \"native\": null,\n  \"speedup\": null\n}"
     },
     "cliScan": {
       "ok": false,
@@ -42,7 +42,7 @@
     "count": 5000,
     "js": {
       "label": "js",
-      "ms": 54.39
+      "ms": 53.15
     },
     "native": null,
     "speedup": null
