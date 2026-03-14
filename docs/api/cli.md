@@ -3,6 +3,12 @@
 ## `tailwind-styled init`
 Generate setup awal project.
 
+<<<<<<< ours
+=======
+## `tailwind-styled scan`
+Scan kelas utilitas pada workspace.
+
+>>>>>>> theirs
 ## `tailwind-styled build`
 Jalankan build pipeline sekali.
 

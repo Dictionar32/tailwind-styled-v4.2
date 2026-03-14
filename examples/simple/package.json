@@ -2,8 +2,19 @@
   "name": "example-simple",
   "private": true,
   "version": "0.0.0",
+<<<<<<< ours
   "scripts": {
     "dev": "node src/dev.js",
     "build": "node src/build.js"
+=======
+  "type": "module",
+  "scripts": {
+    "dev": "node src/dev.js",
+    "build": "node src/build.js",
+    "test": "node src/dev.js && node src/build.js"
+  },
+  "dependencies": {
+    "tailwind-styled-v4": "*"
+>>>>>>> theirs
   }
 }

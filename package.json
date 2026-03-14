@@ -8,7 +8,7 @@
     "examples/*"
   ],
   "scripts": {
-    "build": "npm run build -w packages/animate -w packages/theme -w packages/plugin -w packages/preset -w packages/compiler -w packages/scanner -w packages/engine -w packages/cli -w packages/devtools -w packages/runtime-css -w packages/vite -w packages/rspack && npm run build -w packages/next -w packages/core && npm run build -w examples/next-app",
+    "build": "npm run build -w packages/animate -w packages/theme -w packages/plugin -w packages/preset -w packages/compiler -w packages/scanner -w packages/engine -w packages/cli -w packages/devtools -w packages/runtime-css -w packages/vite -w packages/rspack && npm run build -w packages/next -w packages/core",
     "build:packages": "npm run build -w packages/animate -w packages/theme -w packages/plugin -w packages/preset -w packages/compiler -w packages/scanner -w packages/engine -w packages/cli -w packages/devtools -w packages/runtime-css -w packages/vite -w packages/rspack && npm run build -w packages/next -w packages/core",
     "dev": "npm run dev --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
@@ -26,7 +26,13 @@
     "merge:phase8-9:hint": "echo \"If GitHub shows conflicts, resolve package.json + engine/scanner tsconfig first, then rerun validate:final and health:summary\"",
     "validate:deps": "node scripts/validate/dependency-matrix-check.mjs",
     "validate:pr5:gaps": "node scripts/validate/pr5-gap-check.mjs",
+<<<<<<< ours
     "bench:incremental": "node scripts/benchmark/incremental.js"
+=======
+    "bench:incremental": "node scripts/benchmark/incremental.js",
+    "verify:examples": "npm run build -w packages/core && npm run test -w examples/nextjs && npm run test -w examples/vite && npm run test -w examples/rspack && npm run test -w examples/simple && npm run test -w examples/package-frontend",
+    "build:test": "npm run build && npm run verify:examples"
+>>>>>>> theirs
   },
   "engines": {
     "node": ">=18"

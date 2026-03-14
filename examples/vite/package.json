@@ -2,12 +2,32 @@
   "name": "example-vite",
   "private": true,
   "version": "0.0.0",
+<<<<<<< ours
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
   },
   "devDependencies": {
+=======
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "node -e \"const fs=require('fs');['index.html','vite.config.ts','src/App.tsx','src/main.tsx'].forEach(p=>{if(!fs.existsSync(p)) throw new Error('missing '+p)});console.log('vite example files ok')\""
+  },
+  "dependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tailwind-styled-v4": "*"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "typescript": "^5.6.0",
+>>>>>>> theirs
     "vite": "^5.4.0"
   }
 }
