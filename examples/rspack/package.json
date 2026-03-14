@@ -4,27 +4,6 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "rspack serve",
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-    "build": "rspack build"
-  },
-  "devDependencies": {
-    "@rspack/cli": "^1.0.0"
-=======
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
     "build": "rspack build",
     "test": "node -e \"const fs=require('fs');['rspack.config.mjs','src/index.ts'].forEach(p=>{if(!fs.existsSync(p)) throw new Error('missing '+p)});console.log('rspack example files ok')\""
   },
@@ -35,21 +14,5 @@
     "@rspack/cli": "^1.0.0",
     "@rspack/core": "^1.0.0",
     "typescript": "^5.6.0"
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
   }
 }
