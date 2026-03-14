@@ -4,12 +4,6 @@ import path from "node:path"
 const root = process.cwd()
 const artifactPath = path.join(root, "artifacts", "pr5-gap-check.json")
 
-<<<<<<< ours
-function hasContent(filePath, needle) {
-  if (!fs.existsSync(filePath)) return false
-  const content = fs.readFileSync(filePath, "utf8")
-  return content.includes(needle)
-=======
 function read(filePath) {
   return fs.readFileSync(filePath, "utf8")
 }
@@ -23,7 +17,6 @@ function hasAll(filePath, needles) {
   if (!fs.existsSync(filePath)) return false
   const content = read(filePath)
   return needles.every((needle) => content.includes(needle))
->>>>>>> theirs
 }
 
 const checks = [
@@ -32,28 +25,29 @@ const checks = [
     priority: "high",
     label: "AST parser for JSX/TSX scanner",
     path: "packages/scanner/src/ast-parser.ts",
-    quality: (p) => hasContent(p, "typescript") && hasContent(p, "createSourceFile"),
+    quality: (p) =>
+      hasAll(p, ["createSourceFile", "QuestionQuestionToken", "BarBarToken", "PlusToken", "className", "class"]),
   },
   {
     id: "scanner-template-handler",
     priority: "high",
     label: "Template literal handler for scanner",
     path: "packages/scanner/src/template-handler.ts",
-    quality: (p) => hasContent(p, "splitClassTokens"),
+    quality: (p) => hasAll(p, ["splitClassTokens", "normalizeClassToken"]),
   },
   {
     id: "benchmark-script",
     priority: "high",
     label: "Incremental benchmark script",
     path: "scripts/benchmark/incremental.js",
-    quality: (p) => hasContent(p, "BENCH_MAX_FULL_SCAN_MS") && hasContent(p, "OUTPUT_FILE"),
+    quality: (p) => hasAll(p, ["BENCH_MAX_FULL_SCAN_MS", "BENCH_MAX_INCREMENTAL_MS", "OUTPUT_FILE", "process.exitCode"]),
   },
   {
     id: "benchmark-ci",
     priority: "high",
     label: "Benchmark CI workflow",
     path: ".github/workflows/benchmark.yml",
-    quality: (p) => hasContent(p, "upload-artifact") && hasContent(p, "BENCH_MAX_FULL_SCAN_MS"),
+    quality: (p) => hasAll(p, ["upload-artifact", "BENCH_MAX_FULL_SCAN_MS", "BENCH_MAX_INCREMENTAL_MS"]),
   },
   {
     id: "large-fixture",
@@ -67,18 +61,14 @@ const checks = [
     priority: "medium",
     label: "API docs: core",
     path: "docs/api/core.md",
-    quality: (p) => hasContent(p, "## `tw`") && hasContent(p, "## `styled`"),
+    quality: (p) => hasAll(p, ["## `tw`", "## `styled`", "## `cx`", "## `liveToken`"]),
   },
   {
     id: "docs-api-scanner",
     priority: "medium",
     label: "API docs: scanner",
     path: "docs/api/scanner.md",
-<<<<<<< ours
-    quality: (p) => hasContent(p, "scanWorkspace"),
-=======
     quality: (p) => hasAll(p, ["scanSource", "scanFile", "scanWorkspace", "useCache"]),
->>>>>>> theirs
   },
   {
     id: "docs-api-engine",
@@ -92,60 +82,41 @@ const checks = [
     priority: "medium",
     label: "API docs: cli",
     path: "docs/api/cli.md",
-<<<<<<< ours
-    quality: (p) => hasContent(p, "tailwind-styled"),
-=======
     quality: (p) => hasAll(p, ["tailwind-styled init", "tailwind-styled scan", "tailwind-styled watch", "tailwind-styled doctor"]),
->>>>>>> theirs
   },
   {
     id: "docs-api-vite",
     priority: "medium",
     label: "API docs: vite",
     path: "docs/api/vite.md",
-<<<<<<< ours
-    quality: (p) => hasContent(p, "tailwindStyledVitePlugin"),
-=======
     quality: (p) => hasAll(p, ["tailwindStyledVitePlugin", "include", "exclude", "cacheDir"]),
->>>>>>> theirs
   },
   {
     id: "example-nextjs",
     priority: "high",
     label: "Example project: nextjs",
     path: "examples/nextjs/package.json",
-<<<<<<< ours
-    quality: (p) => hasContent(p, "next dev") && fs.existsSync(path.join(root, "examples/nextjs/app/page.tsx")),
-=======
     quality: () =>
       hasContent(path.join(root, "examples/nextjs/package.json"), "next dev") &&
       hasContent(path.join(root, "examples/nextjs/app/page.tsx"), "<Card") &&
       hasContent(path.join(root, "examples/nextjs/components/card.tsx"), "styled"),
->>>>>>> theirs
   },
   {
     id: "example-vite",
     priority: "high",
     label: "Example project: vite",
     path: "examples/vite/package.json",
-<<<<<<< ours
-    quality: (p) => hasContent(p, "vite") && fs.existsSync(path.join(root, "examples/vite/index.html")),
-=======
     quality: () =>
       hasContent(path.join(root, "examples/vite/package.json"), "@vitejs/plugin-react") &&
       hasContent(path.join(root, "examples/vite/src/App.tsx"), "styled") &&
       hasContent(path.join(root, "examples/vite/src/App.tsx"), "liveToken") &&
       hasContent(path.join(root, "examples/vite/src/main.tsx"), "createRoot"),
->>>>>>> theirs
   },
   {
     id: "example-rspack",
     priority: "high",
     label: "Example project: rspack",
     path: "examples/rspack/package.json",
-<<<<<<< ours
-    quality: (p) => hasContent(p, "rspack") && fs.existsSync(path.join(root, "examples/rspack/src/index.ts")),
-=======
     quality: () =>
       hasContent(path.join(root, "examples/rspack/package.json"), "rspack") &&
       hasContent(path.join(root, "examples/rspack/rspack.config.mjs"), "defineConfig") &&
@@ -160,20 +131,15 @@ const checks = [
       hasContent(path.join(root, "examples/package-frontend/package.json"), "example-package-frontend") &&
       hasContent(path.join(root, "examples/package-frontend/src/index.ts"), "export const") &&
       hasContent(path.join(root, "examples/package-frontend/src/index.ts"), "styled"),
->>>>>>> theirs
   },
   {
     id: "example-simple",
     priority: "medium",
     label: "Example project: simple",
     path: "examples/simple/package.json",
-<<<<<<< ours
-    quality: (p) => hasContent(p, "src/dev.js") && fs.existsSync(path.join(root, "examples/simple/src/dev.js")),
-=======
     quality: () =>
       hasContent(path.join(root, "examples/simple/src/dev.js"), "styled") &&
       hasContent(path.join(root, "examples/simple/src/build.js"), "parseTailwindClasses"),
->>>>>>> theirs
   },
 ]
 

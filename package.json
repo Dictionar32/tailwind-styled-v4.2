@@ -26,13 +26,9 @@
     "merge:phase8-9:hint": "echo \"If GitHub shows conflicts, resolve package.json + engine/scanner tsconfig first, then rerun validate:final and health:summary\"",
     "validate:deps": "node scripts/validate/dependency-matrix-check.mjs",
     "validate:pr5:gaps": "node scripts/validate/pr5-gap-check.mjs",
-<<<<<<< ours
-    "bench:incremental": "node scripts/benchmark/incremental.js"
-=======
     "bench:incremental": "node scripts/benchmark/incremental.js",
     "verify:examples": "npm run build -w packages/core && npm run test -w examples/nextjs && npm run test -w examples/vite && npm run test -w examples/rspack && npm run test -w examples/simple && npm run test -w examples/package-frontend",
     "build:test": "npm run build && npm run verify:examples"
->>>>>>> theirs
   },
   "engines": {
     "node": ">=18"

@@ -3,10 +3,22 @@
   "private": true,
   "version": "0.0.0",
 <<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
   "scripts": {
     "dev": "node src/dev.js",
     "build": "node src/build.js"
 =======
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
   "type": "module",
   "scripts": {
     "dev": "node src/dev.js",
@@ -15,6 +27,18 @@
   },
   "dependencies": {
     "tailwind-styled-v4": "*"
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
+>>>>>>> theirs
+=======
 >>>>>>> theirs
   }
 }

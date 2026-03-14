@@ -27,6 +27,15 @@ function extractFromExpression(node: ts.Expression): string[] {
     return [...extractFromExpression(node.left), ...extractFromExpression(node.right)]
   }
 
+  if (
+    ts.isBinaryExpression(node) &&
+    (node.operatorToken.kind === ts.SyntaxKind.BarBarToken ||
+      node.operatorToken.kind === ts.SyntaxKind.QuestionQuestionToken ||
+      node.operatorToken.kind === ts.SyntaxKind.PlusToken)
+  ) {
+    return [...extractFromExpression(node.left), ...extractFromExpression(node.right)]
+  }
+
   if (ts.isArrayLiteralExpression(node)) {
     const classes: string[] = []
     for (const element of node.elements) {
@@ -56,7 +65,10 @@ export function parseJsxLikeClasses(source: string): string[] {
   const classes = new Set<string>()
 
   const visit = (node: ts.Node) => {
-    if (ts.isJsxAttribute(node) && getTagNameFromJsxAttribute(node.name) === "className") {
+    if (
+      ts.isJsxAttribute(node) &&
+      (getTagNameFromJsxAttribute(node.name) === "className" || getTagNameFromJsxAttribute(node.name) === "class")
+    ) {
       const initializer = node.initializer
       if (initializer && ts.isStringLiteralLike(initializer)) {
         for (const token of splitClassTokens(initializer.text)) classes.add(token)

@@ -6,7 +6,27 @@
     "dev": "next dev",
     "build": "next build",
 <<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
     "start": "next start"
+=======
+    "start": "next start",
+    "test": "node -e \"const fs=require('fs');['app/layout.tsx','app/page.tsx','components/card.tsx'].forEach(p=>{if(!fs.existsSync(p)) throw new Error('missing '+p)});console.log('nextjs example files ok')\""
+>>>>>>> theirs
+=======
+    "start": "next start",
+    "test": "node -e \"const fs=require('fs');['app/layout.tsx','app/page.tsx','components/card.tsx'].forEach(p=>{if(!fs.existsSync(p)) throw new Error('missing '+p)});console.log('nextjs example files ok')\""
+>>>>>>> theirs
+=======
+    "start": "next start",
+    "test": "node -e \"const fs=require('fs');['app/layout.tsx','app/page.tsx','components/card.tsx'].forEach(p=>{if(!fs.existsSync(p)) throw new Error('missing '+p)});console.log('nextjs example files ok')\""
+>>>>>>> theirs
+=======
+    "start": "next start",
+    "test": "node -e \"const fs=require('fs');['app/layout.tsx','app/page.tsx','components/card.tsx'].forEach(p=>{if(!fs.existsSync(p)) throw new Error('missing '+p)});console.log('nextjs example files ok')\""
+>>>>>>> theirs
 =======
     "start": "next start",
     "test": "node -e \"const fs=require('fs');['app/layout.tsx','app/page.tsx','components/card.tsx'].forEach(p=>{if(!fs.existsSync(p)) throw new Error('missing '+p)});console.log('nextjs example files ok')\""
@@ -16,7 +36,27 @@
     "next": "15.0.0",
     "react": "19.0.0",
 <<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
+<<<<<<< ours
     "react-dom": "19.0.0"
+=======
+    "react-dom": "19.0.0",
+    "tailwind-styled-v4": "*"
+>>>>>>> theirs
+=======
+    "react-dom": "19.0.0",
+    "tailwind-styled-v4": "*"
+>>>>>>> theirs
+=======
+    "react-dom": "19.0.0",
+    "tailwind-styled-v4": "*"
+>>>>>>> theirs
+=======
+    "react-dom": "19.0.0",
+    "tailwind-styled-v4": "*"
+>>>>>>> theirs
 =======
     "react-dom": "19.0.0",
     "tailwind-styled-v4": "*"
