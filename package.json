@@ -2,7 +2,7 @@
   "name": "tailwind-styled-v4-monorepo",
   "version": "2.0.0",
   "private": true,
-  "description": "Monorepo for tailwind-styled-v4 — compiler-driven, RSC-aware styling",
+  "description": "Monorepo for tailwind-styled-v4 \u2014 compiler-driven, RSC-aware styling",
   "workspaces": [
     "packages/*",
     "examples/*"
@@ -56,7 +56,9 @@
     "bench:toolchains": "node scripts/v48/benchmark-toolchains.mjs",
     "v4.9:demo": "node packages/cli/dist/index.js optimize packages/cli/src/index.ts --constant-folding --partial-eval",
     "v5.0:demo": "node packages/cli/dist/index.js cache enable s3://tailwind-cache",
-    "v5.0:metrics": "node packages/cli/dist/index.js metrics 3030"
+    "v5.0:metrics": "node packages/cli/dist/index.js metrics 3030",
+    "test:smoke": "node scripts/smoke/index.mjs",
+    "test:smoke:fallback": "node scripts/test-fallback.mjs"
   },
   "engines": {
     "node": ">=18"
