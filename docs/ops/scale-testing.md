@@ -93,55 +93,16 @@ npm run ci:scale:download -- --repo=owner/repo --runId=<RUN_ID> --out=artifacts/
 node scripts/benchmark/compare-scale-results.mjs --input=artifacts/scale-download --out=artifacts/scale-summary.json
 ```
 
-Atau gunakan shortcut namespace CI:
+Atau gunakan shortcut:
 
 ```bash
-npm run ci:scale:compare -- --input=artifacts/scale-download --out=artifacts/scale-summary.json
+npm run ci:scale:compare
 ```
 
 ### 7.4 Update baseline
 
 ```bash
-npm run ci:scale:baseline -- --source=artifacts/scale-summary.json --target=artifacts/scale-baseline.json
+npm run ci:scale:baseline
 ```
 
 Perintah ini menulis baseline ke `artifacts/scale-baseline.json` dari hasil summary terbaru.
-
-## 8) Command namespace
-
-### Namespace CI (Primary - untuk automation)
-Command di namespace `ci:` adalah **primary interface**. Mereka langsung memanggil script Node.js tanpa perantara.
-
-```bash
-# Download artifacts dari run terbaru (otomatis)
-npm run ci:scale:download -- --out=./artifacts
-
-# Download artifacts dari run spesifik
-npm run ci:scale:download -- --runId=12345678 --out=./artifacts
-
-# Compare results dari folder artifacts
-npm run ci:scale:compare -- --input=./artifacts --out=./summary.json
-
-# Update baseline dengan hasil terbaru
-npm run ci:scale:baseline -- --source=./summary.json --target=./baseline.json
-```
-
-### Namespace Bench (Alias - backward compatibility)
-Command `bench:scale:*` adalah **pure forwarding alias** ke `ci:scale:*` dengan argument forwarding. Semua contoh di bawah identik dengan versi `ci:`.
-
-```bash
-# Download artifacts via alias
-npm run bench:scale:download -- --out=./artifacts
-
-# Compare results via alias
-npm run bench:scale:compare -- --input=./artifacts --out=./summary.json
-
-# Update baseline via alias
-npm run bench:scale:baseline -- --source=./summary.json --target=./baseline.json
-```
-
-Catatan penting:
-- Gunakan namespace `ci:` untuk automation/CI (lebih jelas, primary).
-- Gunakan namespace `bench:` untuk backward compatibility dengan workflow lama.
-- Kedua namespace identik secara fungsional berkat argument forwarding `--`.
-

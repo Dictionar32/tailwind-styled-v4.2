@@ -35,12 +35,10 @@
     "bench:watch:stability": "npm run build -w @tailwind-styled/engine -w @tailwind-styled/scanner -w @tailwind-styled/compiler && node scripts/benchmark/watch-stability.mjs",
     "ci:scale:trigger": "gh workflow run scale-benchmark.yml",
     "ci:scale:download": "node scripts/benchmark/download-scale-artifacts.mjs",
-    "bench:scale:compare": "npm run ci:scale:compare --",
-    "bench:scale:baseline": "npm run ci:scale:baseline --",
-    "ci:scale:compare": "node scripts/benchmark/compare-scale-results.mjs",
-    "ci:scale:baseline": "node scripts/benchmark/update-scale-baseline.mjs",
-    "bench:scale:trigger": "npm run ci:scale:trigger --",
-    "bench:scale:download": "npm run ci:scale:download --"
+    "bench:scale:compare": "node scripts/benchmark/compare-scale-results.mjs --input=artifacts/scale-download --out=artifacts/scale-summary.json",
+    "bench:scale:baseline": "node scripts/benchmark/update-scale-baseline.mjs --source=artifacts/scale-summary.json --target=artifacts/scale-baseline.json",
+    "ci:scale:compare": "node scripts/benchmark/compare-scale-results.mjs --input=artifacts/scale-download --out=artifacts/scale-summary.json",
+    "ci:scale:baseline": "node scripts/benchmark/update-scale-baseline.mjs --source=artifacts/scale-summary.json --target=artifacts/scale-baseline.json"
   },
   "engines": {
     "node": ">=18"
