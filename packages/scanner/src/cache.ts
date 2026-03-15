@@ -5,10 +5,12 @@ export interface CachedScanFileEntry {
   mtimeMs: number
   size: number
   classes: string[]
+  hitCount?: number
+  lastSeenMs?: number
 }
 
 export interface CachedScanIndex {
-  version: 1
+  version: 2
   files: Record<string, CachedScanFileEntry>
 }
 
@@ -34,17 +36,25 @@ export class ScanCache {
 
   private read(): CachedScanIndex {
     if (!fs.existsSync(this.cachePath)) {
-      return { version: 1, files: {} }
+      return { version: 2, files: {} }
     }
 
     try {
-      const parsed = JSON.parse(fs.readFileSync(this.cachePath, "utf8")) as CachedScanIndex
-      if (parsed?.version === 1 && parsed?.files) return parsed
+      const parsed = JSON.parse(fs.readFileSync(this.cachePath, "utf8")) as {
+        version?: number
+        files?: Record<string, CachedScanFileEntry>
+      }
+      if (parsed?.files) {
+        return {
+          version: 2,
+          files: parsed.files,
+        }
+      }
     } catch {
       // ignore malformed cache and re-init
     }
 
-    return { version: 1, files: {} }
+    return { version: 2, files: {} }
   }
 
   get(filePath: string): CachedScanFileEntry | undefined {
@@ -55,8 +65,19 @@ export class ScanCache {
     this.index.files[filePath] = entry
   }
 
+  touch(filePath: string): void {
+    const entry = this.index.files[filePath]
+    if (!entry) return
+    entry.hitCount = (entry.hitCount ?? 0) + 1
+    entry.lastSeenMs = Date.now()
+  }
+
   delete(filePath: string): void {
     delete this.index.files[filePath]
+  }
+
+  entries(): Array<[string, CachedScanFileEntry]> {
+    return Object.entries(this.index.files)
   }
 
   save(): void {

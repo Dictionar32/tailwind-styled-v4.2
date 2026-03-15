@@ -1,7 +1,7 @@
 {
-  "name": "@tailwind-styled/scanner",
+  "name": "@tailwind-styled/analyzer",
   "version": "2.0.0",
-  "description": "Standalone class scanner for tailwind-styled-v4",
+  "description": "Project-aware analyzer for tailwind-styled-v4",
   "license": "MIT",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -18,15 +18,15 @@
   "sideEffects": false,
   "engines": { "node": ">=18" },
   "dependencies": {
-    "@tailwind-styled/compiler": "*"
+    "@tailwind-styled/scanner": "*"
   },
   "devDependencies": {
     "typescript": "^5",
     "tsup": "^8"
   },
   "scripts": {
-    "build": "tsup src/index.ts --format cjs,esm --dts --out-dir dist --clean --external typescript",
-    "dev": "tsup src/index.ts --format cjs,esm --dts --out-dir dist --watch --external typescript",
+    "build": "tsup src/index.ts --format cjs,esm --dts --out-dir dist --clean",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --out-dir dist --watch",
     "clean": "rm -rf dist"
   }
 }

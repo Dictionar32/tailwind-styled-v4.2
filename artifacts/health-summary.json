@@ -1,18 +1,18 @@
 {
-  "generatedAt": "2026-03-14T13:19:05.037Z",
-  "status": "FAIL",
+  "generatedAt": "2026-03-14T15:27:40.505Z",
+  "status": "PASS",
   "totals": {
-    "passed": 7,
-    "failed": 2
+    "passed": 9,
+    "failed": 0
   },
   "parserBenchmark": {
     "count": 5000,
     "js": {
       "label": "js",
-      "ms": 54.39
+      "ms": 64.27
     },
     "native": null,
     "speedup": null
   },
-  "recommendation": "Fix failing checks before release candidate."
+  "recommendation": "Release candidate gate passed. Safe to continue."
 }

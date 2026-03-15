@@ -4,6 +4,7 @@ import path from "node:path"
 import { extractAllClasses } from "@tailwind-styled/compiler"
 
 import { ScanCache } from "./cache"
+import { SmartCache } from "./smart-cache"
 import { parseJsxLikeClasses } from "./ast-parser"
 
 export interface ScanWorkspaceOptions {
@@ -11,6 +12,7 @@ export interface ScanWorkspaceOptions {
   ignoreDirectories?: string[]
   useCache?: boolean
   cacheDir?: string
+  smartInvalidation?: boolean
 }
 
 export interface ScanFileResult {
@@ -58,10 +60,13 @@ export function scanWorkspace(
   const includeExtensions = options.includeExtensions ?? DEFAULT_EXTENSIONS
   const ignoreDirectories = new Set(options.ignoreDirectories ?? DEFAULT_IGNORES)
   const useCache = options.useCache ?? true
+  const smartInvalidation = options.smartInvalidation ?? true
 
   const files: ScanFileResult[] = []
   const unique = new Set<string>()
   const cache = useCache ? new ScanCache(rootDir, { cacheDir: options.cacheDir }) : null
+  const smartCache = cache && smartInvalidation ? new SmartCache(cache) : null
+  const candidates: string[] = []
 
   function walk(dir: string) {
     if (!fs.existsSync(dir)) return
@@ -76,34 +81,47 @@ export function scanWorkspace(
       }
 
       if (!isScannableFile(fullPath, includeExtensions)) continue
-
-      const stat = fs.statSync(fullPath)
-      let result: ScanFileResult | null = null
-
-      if (cache) {
-        const cached = cache.get(fullPath)
-        if (cached && cached.mtimeMs === stat.mtimeMs && cached.size === stat.size) {
-          result = { file: fullPath, classes: cached.classes }
-        }
-      }
-
-      if (!result) {
-        result = scanFile(fullPath)
-        if (cache) {
-          cache.set(fullPath, {
-            mtimeMs: stat.mtimeMs,
-            size: stat.size,
-            classes: result.classes,
-          })
-        }
-      }
-
-      files.push(result)
-      for (const cls of result.classes) unique.add(cls)
+      candidates.push(fullPath)
     }
   }
 
   walk(rootDir)
+
+  const ordered = smartCache
+    ? smartCache.rankFiles(candidates).map((item) => ({ filePath: item.filePath, stat: item.stat }))
+    : candidates.map((filePath) => ({ filePath, stat: fs.statSync(filePath) }))
+
+  for (const { filePath, stat } of ordered) {
+    let result: ScanFileResult | null = null
+
+    if (cache) {
+      const cached = cache.get(filePath)
+      if (cached && cached.mtimeMs === stat.mtimeMs && cached.size === stat.size) {
+        result = { file: filePath, classes: cached.classes }
+        cache.touch(filePath)
+      }
+    }
+
+    if (!result) {
+      result = scanFile(filePath)
+      if (cache) {
+        cache.set(filePath, {
+          mtimeMs: stat.mtimeMs,
+          size: stat.size,
+          classes: result.classes,
+          hitCount: 1,
+          lastSeenMs: Date.now(),
+        })
+      }
+    }
+
+    files.push(result)
+    for (const cls of result.classes) unique.add(cls)
+  }
+
+  if (smartCache) {
+    smartCache.invalidateMissing(new Set(candidates))
+  }
   cache?.save()
 
   return {
