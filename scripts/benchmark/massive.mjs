@@ -2,9 +2,9 @@ import fs from "node:fs"
 import path from "node:path"
 import { performance } from "node:perf_hooks"
 
-import { analyzeScan } from "@tailwind-styled/analyzer"
-import { createEngine } from "@tailwind-styled/engine"
-import { scanWorkspace } from "@tailwind-styled/scanner"
+import { analyzeScan } from "../../packages/analyzer/dist/index.js"
+import { createEngine } from "../../packages/engine/dist/index.js"
+import { scanWorkspace } from "../../packages/scanner/dist/index.js"
 
 const args = new Map(
   process.argv.slice(2).map((entry) => {

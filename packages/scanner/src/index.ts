@@ -7,6 +7,76 @@ import { ScanCache } from "./cache"
 import { SmartCache } from "./smart-cache"
 import { parseJsxLikeClasses } from "./ast-parser"
 
+type NativeParsedClass = { raw?: string }
+type NativeParserBinding = { parse_classes?: (input: string) => NativeParsedClass[] }
+
+let nativeParserBinding: NativeParserBinding | null | undefined
+let nativeParserInitError: string | null = null
+let nativeParserLogged = false
+
+function canUseCjsRequire(): boolean {
+  return typeof require === "function"
+}
+
+function debugNative(message: string): void {
+  if (process.env.TWS_DEBUG_SCANNER !== "1") return
+  if (nativeParserLogged) return
+  nativeParserLogged = true
+  console.warn(`[scanner:native] ${message}`)
+}
+
+function loadNativeParserBinding(): NativeParserBinding | null {
+  if (nativeParserBinding !== undefined) return nativeParserBinding
+
+  if (!canUseCjsRequire()) {
+    nativeParserBinding = null
+    nativeParserInitError = "require is unavailable in current module format"
+    debugNative(`fallback to JS: ${nativeParserInitError}`)
+    return nativeParserBinding
+  }
+
+  const candidates = [
+    path.resolve(process.cwd(), "native/tailwind_styled_parser.node"),
+    path.resolve(process.cwd(), "native/build/Release/tailwind_styled_parser.node"),
+  ]
+
+  for (const fullPath of candidates) {
+    if (!fs.existsSync(fullPath)) continue
+    try {
+      const required = require(fullPath) as NativeParserBinding
+      if (required && typeof required.parse_classes === "function") {
+        nativeParserBinding = required
+        debugNative(`using native parser from ${fullPath}`)
+        return nativeParserBinding
+      }
+    } catch (error) {
+      nativeParserInitError = error instanceof Error ? error.message : String(error)
+    }
+  }
+
+  nativeParserBinding = null
+  if (!nativeParserInitError) {
+    nativeParserInitError = "native .node binding not found"
+  }
+  debugNative(`fallback to JS: ${nativeParserInitError}`)
+  return nativeParserBinding
+}
+
+function normalizeWithNativeParser(tokens: string[]): string[] | null {
+  const binding = loadNativeParserBinding()
+  if (!binding || typeof binding.parse_classes !== "function") return null
+
+  try {
+    const parsed = binding.parse_classes(tokens.join(" "))
+    const normalized = parsed.map((item) => item.raw?.trim() ?? "").filter(Boolean)
+    return Array.from(new Set(normalized))
+  } catch (error) {
+    nativeParserInitError = error instanceof Error ? error.message : String(error)
+    debugNative(`runtime error, fallback to JS: ${nativeParserInitError}`)
+    return null
+  }
+}
+
 export interface ScanWorkspaceOptions {
   includeExtensions?: string[]
   ignoreDirectories?: string[]
@@ -38,7 +108,11 @@ export function scanSource(source: string): string[] {
     jsxClasses = []
   }
 
-  return Array.from(new Set([...baseClasses, ...jsxClasses]))
+  const merged = Array.from(new Set([...baseClasses, ...jsxClasses]))
+  const nativeNormalized = normalizeWithNativeParser(merged)
+  if (nativeNormalized) return nativeNormalized
+
+  return merged
 }
 
 export function isScannableFile(filePath: string, includeExtensions = DEFAULT_EXTENSIONS): boolean {
