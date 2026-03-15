@@ -30,7 +30,7 @@ export async function runAfterScan(
   let current = scan
   for (const plugin of plugins) {
     const next = await plugin.afterScan?.(current, context)
-    if (next) current = next
+    if (next !== undefined) current = next
   }
   return current
 }
@@ -43,7 +43,7 @@ export async function runTransformClasses(
   let current = classes
   for (const plugin of plugins) {
     const next = await plugin.transformClasses?.(current, context)
-    if (next) current = next
+    if (next !== undefined) current = next
   }
   return current
 }
@@ -66,7 +66,7 @@ export async function runAfterBuild(
   let current = result
   for (const plugin of plugins) {
     const next = await plugin.afterBuild?.(current, context)
-    if (next) current = next
+    if (next !== undefined) current = next
   }
   return current
 }

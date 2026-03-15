@@ -44,6 +44,7 @@ npm run build -w packages/scanner
 npm run build -w packages/engine
 npm run build -w packages/vite
 npm run build -w packages/cli
+npm run test -w packages/plugin-registry
 ```
 
 Jika menyentuh benchmark/ops docs, jalankan juga:

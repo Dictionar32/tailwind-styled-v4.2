@@ -17,9 +17,13 @@
       "require": "./dist/index.cjs"
     }
   },
-  "files": ["dist", "registry.json"],
+  "files": [
+    "dist",
+    "registry.json"
+  ],
   "scripts": {
     "build": "tsup src/index.ts src/cli.ts --format cjs,esm --dts --out-dir dist --clean --external typescript",
-    "dev": "tsup src/index.ts src/cli.ts --format cjs,esm --dts --out-dir dist --watch --external typescript"
+    "dev": "tsup src/index.ts src/cli.ts --format cjs,esm --dts --out-dir dist --watch --external typescript",
+    "test": "npm run build && node --test test/*.test.mjs"
   }
 }
