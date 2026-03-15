@@ -14,9 +14,13 @@
       "require": "./dist/index.cjs"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "sideEffects": false,
-  "engines": { "node": ">=18" },
+  "engines": {
+    "node": ">=18"
+  },
   "dependencies": {
     "@tailwind-styled/scanner": "*"
   },
@@ -27,6 +31,7 @@
   "scripts": {
     "build": "tsup src/index.ts --format cjs,esm --dts --out-dir dist --clean",
     "dev": "tsup src/index.ts --format cjs,esm --dts --out-dir dist --watch",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "prebuild": "npm run build -w @tailwind-styled/scanner"
   }
 }
