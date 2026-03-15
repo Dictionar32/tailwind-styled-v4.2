@@ -1,0 +1,11 @@
+{
+  "name": "@tailwind-styled/dashboard",
+  "version": "0.1.0",
+  "description": "Performance dashboard for benchmark and runtime metrics",
+  "license": "MIT",
+  "type": "module",
+  "main": "./src/server.mjs",
+  "scripts": {
+    "dev": "node src/server.mjs"
+  }
+}

@@ -1,24 +1,16 @@
 #!/usr/bin/env node
 
-/**
- * tailwind-styled-v4 — CLI Generator
- *
- * npx create-tailwind-styled
- *
- * Membuat project baru dengan:
- * - Next.js (App Router)
- * - React 19
- * - Tailwind CSS v4
- * - tailwind-styled-v4 v2
- * - TypeScript
- */
-
 import fs from "node:fs"
 import path from "node:path"
 
-const TEMPLATES = {
+type TemplateHandler = (projectDir: string, name: string) => void
+
+const TEMPLATES: Record<string, TemplateHandler> = {
   "next-app": createNextApp,
-  "vite-app": createViteApp,
+  "vite-react": createViteReactApp,
+  "vite-vue": createViteVueApp,
+  "vite-svelte": createViteSvelteApp,
+  simple: createSimpleApp,
 }
 
 function prompt(q: string): string {
@@ -28,30 +20,43 @@ function prompt(q: string): string {
   return buf.slice(0, n).toString().trim()
 }
 
+function parseArgs(argv: string[]) {
+  const positional = argv.filter((arg) => !arg.startsWith("-"))
+  const name = positional[0]
+  const templateArg = argv.find((arg) => arg.startsWith("--template="))
+  const template = templateArg?.split("=")[1]
+  return { name, template }
+}
+
 async function main() {
+  const rawArgs = process.argv.slice(2)
+  const parsed = parseArgs(rawArgs)
+
   console.log("\n┌─────────────────────────────────────────────┐")
   console.log("│     tailwind-styled-v4 — Project Generator  │")
   console.log("│     Zero-config. Zero-runtime. RSC-Aware.   │")
   console.log("└─────────────────────────────────────────────┘\n")
 
-  const name = prompt("Project name (my-app): ") || "my-app"
-  const template = prompt("Template [next-app/vite-app] (next-app): ") || "next-app"
+  const name = (parsed.name ?? prompt("Project name (my-app): ")) || "my-app"
+  const template =
+    (parsed.template ??
+      prompt("Template [next-app/vite-react/vite-vue/vite-svelte/simple] (next-app): ")) ||
+    "next-app"
 
-  if (!TEMPLATES[template as keyof typeof TEMPLATES]) {
+  const handler = TEMPLATES[template]
+  if (!handler) {
     console.error(`Unknown template: ${template}`)
     process.exit(1)
   }
 
   const projectDir = path.resolve(process.cwd(), name)
-
   if (fs.existsSync(projectDir)) {
     console.error(`Directory ${name} already exists.`)
     process.exit(1)
   }
 
   console.log(`\nCreating ${template} in ./${name}...\n`)
-
-  TEMPLATES[template as keyof typeof TEMPLATES](projectDir, name)
+  handler(projectDir, name)
 
   console.log(`
 ✅ Done! Get started:
@@ -59,29 +64,13 @@ async function main() {
   cd ${name}
   npm install
   npm run dev
-
-Zero-config features enabled:
-  ✓ tailwind.config.ts  — auto-generated with built-in preset
-  ✓ globals.css         — auto-generated with zero setup
-  ✓ Safelist            — auto-generated on build
-  ✓ RSC-Aware           — auto "use client" only when needed
-  ✓ Variant compile     — O(1) lookup table, no runtime engine
-
-Docs: https://github.com/dictionar32/tailwind-styled-v4
 `)
 }
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Next.js template
-// ─────────────────────────────────────────────────────────────────────────────
 
 function createNextApp(dir: string, name: string) {
   fs.mkdirSync(dir, { recursive: true })
   fs.mkdirSync(path.join(dir, "src/app"), { recursive: true })
-  fs.mkdirSync(path.join(dir, "src/components"), { recursive: true })
-  fs.mkdirSync(path.join(dir, "public"), { recursive: true })
 
-  // package.json
   fs.writeFileSync(
     path.join(dir, "package.json"),
     JSON.stringify(
@@ -89,11 +78,7 @@ function createNextApp(dir: string, name: string) {
         name,
         version: "0.1.0",
         private: true,
-        scripts: {
-          dev: "next dev --turbopack",
-          build: "next build",
-          start: "next start",
-        },
+        scripts: { dev: "next dev --turbopack", build: "next build", start: "next start" },
         dependencies: {
           next: "^15",
           react: "^19",
@@ -101,10 +86,10 @@ function createNextApp(dir: string, name: string) {
           "tailwind-styled-v4": "^2",
         },
         devDependencies: {
-          "@types/node": "^20",
-          "@types/react": "^19",
           tailwindcss: "^4",
           typescript: "^5",
+          "@types/react": "^19",
+          "@types/node": "^20",
         },
       },
       null,
@@ -112,154 +97,56 @@ function createNextApp(dir: string, name: string) {
     )
   )
 
-  // next.config.ts
   fs.writeFileSync(
     path.join(dir, "next.config.ts"),
     `import type { NextConfig } from "next"
 import { withTailwindStyled } from "tailwind-styled-v4/next"
 
-const nextConfig: NextConfig = {
-  // your next config here
-}
-
+const nextConfig: NextConfig = {}
 export default withTailwindStyled()(nextConfig)
 `
   )
 
-  // tailwind.config.ts
-  fs.writeFileSync(
-    path.join(dir, "tailwind.config.ts"),
-    `import type { Config } from "tailwindcss"
-
-const safelist = (() => {
-  try { return require("./.tailwind-styled-safelist.json") } catch { return [] }
-})()
-
-export default {
-  content: ["./src/**/*.{tsx,ts,jsx,js}"],
-  safelist,
-  theme: { extend: {} },
-  plugins: [],
-} satisfies Config
-`
-  )
-
-  // tsconfig.json
-  fs.writeFileSync(
-    path.join(dir, "tsconfig.json"),
-    JSON.stringify(
-      {
-        compilerOptions: {
-          target: "ES2017",
-          lib: ["dom", "dom.iterable", "esnext"],
-          allowJs: true,
-          skipLibCheck: true,
-          strict: true,
-          noEmit: true,
-          esModuleInterop: true,
-          module: "esnext",
-          moduleResolution: "bundler",
-          resolveJsonModule: true,
-          isolatedModules: true,
-          jsx: "preserve",
-          incremental: true,
-          plugins: [{ name: "next" }],
-          paths: { "@/*": ["./src/*"] },
-        },
-        include: ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-        exclude: ["node_modules"],
-      },
-      null,
-      2
-    )
-  )
-
-  // src/app/layout.tsx
+  fs.writeFileSync(path.join(dir, "src/app/globals.css"), `@import "tailwindcss";\n`)
   fs.writeFileSync(
     path.join(dir, "src/app/layout.tsx"),
-    `import type { Metadata } from "next"
-import "./globals.css"
-
-export const metadata: Metadata = {
-  title: "${name}",
-  description: "Built with tailwind-styled-v4",
-}
+    `import "./globals.css"
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="en">
-      <body>{children}</body>
-    </html>
-  )
+  return <html lang="en"><body>{children}</body></html>
 }
 `
   )
 
-  // src/app/globals.css
-  fs.writeFileSync(
-    path.join(dir, "src/app/globals.css"),
-    `@import "tailwindcss";
-`
-  )
-
-  // src/app/page.tsx
   fs.writeFileSync(
     path.join(dir, "src/app/page.tsx"),
     `import { tw } from "tailwind-styled-v4"
 
-const Hero = tw.section\`
-  min-h-screen flex flex-col items-center justify-center
-  bg-zinc-950 text-white
-\`
-
-const Title = tw.h1\`
-  text-5xl font-bold tracking-tight mb-4
-\`
-
-const Subtitle = tw.p\`
-  text-zinc-400 text-lg
-\`
+const Page = tw.main\`min-h-screen grid place-items-center bg-zinc-950 text-white\`
 
 export default function HomePage() {
-  return (
-    <Hero>
-      <Title>${name}</Title>
-      <Subtitle>Built with tailwind-styled-v4</Subtitle>
-    </Hero>
-  )
+  return <Page>${name}</Page>
 }
 `
   )
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Vite template
-// ─────────────────────────────────────────────────────────────────────────────
-
-function createViteApp(dir: string, name: string) {
-  fs.mkdirSync(dir, { recursive: true })
+function createViteReactApp(dir: string, name: string) {
   fs.mkdirSync(path.join(dir, "src"), { recursive: true })
-
   fs.writeFileSync(
     path.join(dir, "package.json"),
     JSON.stringify(
       {
         name,
-        version: "0.1.0",
         private: true,
         type: "module",
         scripts: { dev: "vite", build: "vite build", preview: "vite preview" },
-        dependencies: {
-          react: "^19",
-          "react-dom": "^19",
-          "tailwind-styled-v4": "^2",
-        },
+        dependencies: { react: "^19", "react-dom": "^19", "tailwind-styled-v4": "^2" },
         devDependencies: {
-          "@types/react": "^19",
+          vite: "^6",
           "@vitejs/plugin-react": "^4",
           tailwindcss: "^4",
           typescript: "^5",
-          vite: "^6",
         },
       },
       null,
@@ -273,24 +160,44 @@ function createViteApp(dir: string, name: string) {
 import react from "@vitejs/plugin-react"
 import { tailwindStyledPlugin } from "tailwind-styled-v4/vite"
 
-export default defineConfig({
-  plugins: [react(), tailwindStyledPlugin()],
-})
+export default defineConfig({ plugins: [react(), tailwindStyledPlugin()] })
 `
   )
 
-  fs.writeFileSync(
-    path.join(dir, "src/App.tsx"),
-    `import { tw } from "tailwind-styled-v4"
-
-const Container = tw.div\`min-h-screen bg-zinc-950 text-white flex items-center justify-center\`
-const Title = tw.h1\`text-4xl font-bold\`
-
-export default function App() {
-  return <Container><Title>${name}</Title></Container>
+  fs.writeFileSync(path.join(dir, "src/main.tsx"), `console.log("${name} - vite react template")\n`)
 }
-`
+
+function createViteVueApp(dir: string, name: string) {
+  fs.mkdirSync(path.join(dir, "src"), { recursive: true })
+  fs.writeFileSync(
+    path.join(dir, "package.json"),
+    JSON.stringify({ name, private: true, type: "module", scripts: { dev: "vite" } }, null, 2)
   )
+  fs.writeFileSync(
+    path.join(dir, "src/main.ts"),
+    `console.log("${name} - vite vue template placeholder")\n`
+  )
+}
+
+function createViteSvelteApp(dir: string, name: string) {
+  fs.mkdirSync(path.join(dir, "src"), { recursive: true })
+  fs.writeFileSync(
+    path.join(dir, "package.json"),
+    JSON.stringify({ name, private: true, type: "module", scripts: { dev: "vite" } }, null, 2)
+  )
+  fs.writeFileSync(
+    path.join(dir, "src/main.ts"),
+    `console.log("${name} - vite svelte template placeholder")\n`
+  )
+}
+
+function createSimpleApp(dir: string, name: string) {
+  fs.mkdirSync(dir, { recursive: true })
+  fs.writeFileSync(
+    path.join(dir, "package.json"),
+    JSON.stringify({ name, private: true, scripts: { dev: "node index.js" } }, null, 2)
+  )
+  fs.writeFileSync(path.join(dir, "index.js"), "console.log('tailwind-styled simple template ready')\n")
 }
 
 main().catch(console.error)

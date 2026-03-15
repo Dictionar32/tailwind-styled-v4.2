@@ -71,3 +71,39 @@ npm run bench:massive -- --root=test/fixtures/large-project --out=artifacts/scal
 - Benchmark publik lintas OS/Node.
 - Hardening example Next.js existing (`examples/standar-config-next-js-app`).
 - Dokumentasi release/announcement.
+
+## 8) Release process
+
+### Prasyarat
+
+- Memiliki akses publish package.
+- `npm` sudah login (`npm whoami`).
+- CI green pada branch release candidate.
+
+### Checklist rilis
+
+1. Sinkronkan versi di package yang relevan.
+2. Pastikan changelog/release note diperbarui.
+3. Jalankan validasi:
+
+```bash
+npm run validate:final
+npm run validate:deps
+npm run validate:pr5:gaps
+```
+
+4. Jalankan benchmark/regression yang diperlukan:
+
+```bash
+node scripts/regression/rust-parser.js
+npm run bench:massive -- --root=test/fixtures/large-project --out=artifacts/scale/massive-release.json
+```
+
+5. Buat release PR dan minta review minimal 1 maintainer.
+6. Setelah merge, tag release dan publish:
+
+```bash
+git tag v4.1.0
+git push origin v4.1.0
+npm publish --workspaces --access public
+```
