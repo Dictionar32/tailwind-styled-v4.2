@@ -45,6 +45,58 @@ Agar adopsi lebih luas (pemula sampai tim enterprise), prioritas peningkatan yan
 
 Jika tujuh area ini konsisten ditingkatkan, paket akan lebih mudah dipakai oleh pemula, tim produk kecil, maupun organisasi besar.
 
+## Apa beda status Prototipe, Buildable, DONE/Production-ready, dan Released?
+Gunakan definisi ini untuk membaca progres fitur secara konsisten:
+
+| Status | Arti | Kode jalan? | Production-ready? | Contoh di proyek |
+| --- | --- | --- | --- | --- |
+| **Prototipe** | Implementasi awal; fitur inti sudah bisa dicoba, tapi masih eksperimental dan perlu validasi lanjutan. | ✅ Ya | ❌ Belum | v4.5 Studio Desktop, AI Assistant, Token Sync; command Oxc v4.6–v4.8 |
+| **Buildable** | Kode bisa dikompilasi dan paket bisa dipasang, tetapi stabilitas/operasional belum final. | ✅ Ya | ⚠️ Mungkin (butuh pengujian) | v4.2 Plugin Registry, Dashboard, Testing Utilities |
+| **DONE / Production-ready** | Fitur stabil, tervalidasi baik, dan siap dipakai di lingkungan produksi. | ✅ Ya | ✅ Ya | Core Engine (scanner, CLI), Rust parser + fallback, v4.3 Unified CLI |
+| **RELEASED** | Sudah dipublikasikan ke npm dan tersedia untuk adopsi publik. | ✅ Ya | ✅ Ya (sesuai scope rilis) | Paket yang sudah dipublish di kanal rilis |
+
+Ringkasnya:
+- **Prototipe**: bisa diuji, masih kasar.
+- **Buildable**: bisa dibangun/diinstall, perlu hardening.
+- **DONE/Production-ready**: stabil dan aman untuk produksi.
+- **Released**: sudah terbit secara publik.
+
+## Aku mau semua sekaligus: apa rencana eksekusinya?
+Bisa. Gunakan pendekatan **parallel track** agar peningkatan status berjalan serempak tapi tetap terukur:
+
+### Track A — Prototipe ➜ Buildable
+Target fitur: v4.5 (Studio Desktop, AI Assistant, Token Sync) + command Oxc v4.6–v4.8.
+
+Checklist minimum:
+- Build matrix CI hijau: Node 18/20/22 pada Linux/macOS/Windows.
+- Smoke test command utama: `parse`, `transform`, `minify`, `lint`, `format`, `lsp`, `benchmark`.
+- Fallback path wajib lolos tanpa dependency native.
+- Dokumentasi `known limitations` per command.
+
+### Track B — Buildable ➜ DONE/Production-ready
+Target fitur: v4.2 Plugin Registry, Dashboard, Testing Utilities.
+
+Checklist minimum:
+- Integration test untuk alur utama pengguna (happy path + edge case).
+- Error handling standar (sebab, dampak, langkah perbaikan).
+- Telemetri/observability dasar (durasi, error count, memory trend).
+- SLO internal: p95 runtime, error rate, dan reliability threshold.
+
+### Track C — DONE ➜ Released
+Target fitur yang sudah production-ready.
+
+Checklist minimum:
+- Rilis bertahap (canary/rc ➜ stable) + changelog jelas.
+- Verifikasi instalasi paket setelah publish.
+- Post-release smoke test pada contoh proyek resmi.
+
+### Urutan kerja 2 sprint (praktis)
+1. Sprint 1: kunci Track A (semua prototipe menjadi buildable baseline).
+2. Sprint 2: hardening Track B + rilis kandidat untuk Track C.
+
+Dengan pola ini, tim bisa mendorong semua status sekaligus tanpa kehilangan kontrol kualitas.
+Referensi checklist detail: `docs/ops/status-upgrade-playbook.md`.
+
 ## Apakah status "missing: 0" berarti semua roadmap selesai 100%?
 Tidak.
 

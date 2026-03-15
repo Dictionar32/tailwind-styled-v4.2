@@ -5,6 +5,7 @@ import type { CachedScanFileEntry, ScanCache } from "./cache"
 export interface RankedScanFile {
   filePath: string
   stat: fs.Stats
+  cached?: CachedScanFileEntry
   priority: number
 }
 
@@ -18,6 +19,7 @@ export class SmartCache {
 
   rankFiles(filePaths: string[]): RankedScanFile[] {
     const ranked: RankedScanFile[] = []
+    const now = Date.now()
 
     for (const filePath of filePaths) {
       let stat: fs.Stats
@@ -28,20 +30,20 @@ export class SmartCache {
       }
 
       const cached = this.cache.get(filePath)
-      const priority = this.priorityOf(stat, cached)
-      ranked.push({ filePath, stat, priority })
+      const priority = this.priorityOf(stat, cached, now)
+      ranked.push({ filePath, stat, cached, priority })
     }
 
     ranked.sort((a, b) => b.priority - a.priority)
     return ranked
   }
 
-  private priorityOf(stat: fs.Stats, cached?: CachedScanFileEntry): number {
+  private priorityOf(stat: fs.Stats, cached: CachedScanFileEntry | undefined, now: number): number {
     if (!cached) return 1_000_000_000
 
     const mtimeDelta = safeMtimeDelta(stat, cached)
     const sizeDelta = Math.abs(stat.size - cached.size)
-    const recency = cached.lastSeenMs ? Date.now() - cached.lastSeenMs : 0
+    const recency = cached.lastSeenMs ? now - cached.lastSeenMs : 0
     const hotness = cached.hitCount ?? 0
 
     return mtimeDelta * 1000 + sizeDelta * 10 + hotness * 100 - recency / 1000

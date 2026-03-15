@@ -99,6 +99,46 @@ export interface ScanWorkspaceResult {
 export const DEFAULT_EXTENSIONS = [".js", ".jsx", ".ts", ".tsx", ".mjs", ".cjs"]
 export const DEFAULT_IGNORES = ["node_modules", ".git", ".next", "dist", "out", ".turbo", ".cache"]
 
+function buildExtensionSet(includeExtensions: string[]): Set<string> {
+  return new Set(includeExtensions)
+}
+
+function collectCandidates(
+  rootDir: string,
+  ignoreDirectories: Set<string>,
+  extensionSet: Set<string>
+): string[] {
+  const candidates: string[] = []
+  const directories = [rootDir]
+
+  while (directories.length > 0) {
+    const currentDir = directories.pop()
+    if (!currentDir) continue
+
+    let entries: fs.Dirent[] = []
+    try {
+      entries = fs.readdirSync(currentDir, { withFileTypes: true })
+    } catch {
+      continue
+    }
+
+    for (const entry of entries) {
+      const fullPath = path.join(currentDir, entry.name)
+
+      if (entry.isDirectory()) {
+        if (!ignoreDirectories.has(entry.name)) directories.push(fullPath)
+        continue
+      }
+
+      if (!entry.isFile()) continue
+      if (!extensionSet.has(path.extname(entry.name))) continue
+      candidates.push(fullPath)
+    }
+  }
+
+  return candidates
+}
+
 export function scanSource(source: string): string[] {
   const baseClasses = extractAllClasses(source)
   let jsxClasses: string[] = []
@@ -132,6 +172,7 @@ export function scanWorkspace(
   options: ScanWorkspaceOptions = {}
 ): ScanWorkspaceResult {
   const includeExtensions = options.includeExtensions ?? DEFAULT_EXTENSIONS
+  const extensionSet = buildExtensionSet(includeExtensions)
   const ignoreDirectories = new Set(options.ignoreDirectories ?? DEFAULT_IGNORES)
   const useCache = options.useCache ?? true
   const smartInvalidation = options.smartInvalidation ?? true
@@ -140,45 +181,29 @@ export function scanWorkspace(
   const unique = new Set<string>()
   const cache = useCache ? new ScanCache(rootDir, { cacheDir: options.cacheDir }) : null
   const smartCache = cache && smartInvalidation ? new SmartCache(cache) : null
-  const candidates: string[] = []
+  const candidates = collectCandidates(rootDir, ignoreDirectories, extensionSet)
 
-  function walk(dir: string) {
-    if (!fs.existsSync(dir)) return
-
-    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-      const fullPath = path.join(dir, entry.name)
-
-      if (entry.isDirectory()) {
-        if (ignoreDirectories.has(entry.name)) continue
-        walk(fullPath)
-        continue
-      }
-
-      if (!isScannableFile(fullPath, includeExtensions)) continue
-      candidates.push(fullPath)
-    }
+  const processResult = (result: ScanFileResult) => {
+    files.push(result)
+    for (const cls of result.classes) unique.add(cls)
   }
 
-  walk(rootDir)
+  if (!cache) {
+    for (const filePath of candidates) {
+      processResult(scanFile(filePath))
+    }
+  } else if (smartCache) {
+    for (const { filePath, stat, cached } of smartCache.rankFiles(candidates)) {
+      let result: ScanFileResult | null = null
+      const cacheEntry = cached ?? cache.get(filePath)
 
-  const ordered = smartCache
-    ? smartCache.rankFiles(candidates).map((item) => ({ filePath: item.filePath, stat: item.stat }))
-    : candidates.map((filePath) => ({ filePath, stat: fs.statSync(filePath) }))
-
-  for (const { filePath, stat } of ordered) {
-    let result: ScanFileResult | null = null
-
-    if (cache) {
-      const cached = cache.get(filePath)
-      if (cached && cached.mtimeMs === stat.mtimeMs && cached.size === stat.size) {
-        result = { file: filePath, classes: cached.classes }
+      if (cacheEntry && cacheEntry.mtimeMs === stat.mtimeMs && cacheEntry.size === stat.size) {
+        result = { file: filePath, classes: cacheEntry.classes }
         cache.touch(filePath)
       }
-    }
 
-    if (!result) {
-      result = scanFile(filePath)
-      if (cache) {
+      if (!result) {
+        result = scanFile(filePath)
         cache.set(filePath, {
           mtimeMs: stat.mtimeMs,
           size: stat.size,
@@ -187,10 +212,33 @@ export function scanWorkspace(
           lastSeenMs: Date.now(),
         })
       }
-    }
 
-    files.push(result)
-    for (const cls of result.classes) unique.add(cls)
+      processResult(result)
+    }
+  } else {
+    for (const filePath of candidates) {
+      const stat = fs.statSync(filePath)
+      let result: ScanFileResult | null = null
+      const cacheEntry = cache.get(filePath)
+
+      if (cacheEntry && cacheEntry.mtimeMs === stat.mtimeMs && cacheEntry.size === stat.size) {
+        result = { file: filePath, classes: cacheEntry.classes }
+        cache.touch(filePath)
+      }
+
+      if (!result) {
+        result = scanFile(filePath)
+        cache.set(filePath, {
+          mtimeMs: stat.mtimeMs,
+          size: stat.size,
+          classes: result.classes,
+          hitCount: 1,
+          lastSeenMs: Date.now(),
+        })
+      }
+
+      processResult(result)
+    }
   }
 
   if (smartCache) {
