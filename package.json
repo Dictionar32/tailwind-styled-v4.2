@@ -2,20 +2,20 @@
   "name": "tailwind-styled-v4-monorepo",
   "version": "2.0.0",
   "private": true,
-  "description": "Monorepo for tailwind-styled-v4 — compiler-driven, RSC-aware styling",
+  "description": "Monorepo for tailwind-styled-v4 \u2014 compiler-driven, RSC-aware styling",
   "workspaces": [
     "packages/*",
     "examples/*"
   ],
   "scripts": {
-    "build": "npm run build -w packages/animate -w packages/theme -w packages/plugin -w packages/preset -w packages/compiler -w packages/scanner -w packages/engine -w packages/cli -w packages/devtools -w packages/runtime-css -w packages/vite -w packages/rspack && npm run build -w packages/next -w packages/core",
-    "build:packages": "npm run build -w packages/animate -w packages/theme -w packages/plugin -w packages/preset -w packages/compiler -w packages/scanner -w packages/engine -w packages/cli -w packages/devtools -w packages/runtime-css -w packages/vite -w packages/rspack && npm run build -w packages/next -w packages/core",
+    "build": "npm run build -w packages/analyzer -w packages/animate -w packages/theme -w packages/plugin -w packages/preset -w packages/compiler -w packages/scanner -w packages/engine -w packages/cli -w packages/devtools -w packages/runtime-css -w packages/vite -w packages/vscode -w packages/rspack && npm run build -w packages/next -w packages/core",
+    "build:packages": "npm run build -w packages/analyzer -w packages/animate -w packages/theme -w packages/plugin -w packages/preset -w packages/compiler -w packages/scanner -w packages/engine -w packages/cli -w packages/devtools -w packages/runtime-css -w packages/vite -w packages/vscode -w packages/rspack && npm run build -w packages/next -w packages/core",
     "dev": "npm run dev --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
     "lint": "oxlint \"packages/*/src/**/*.ts\" \"packages/*/src/**/*.tsx\"",
     "format": "biome format --write",
     "check": "biome check",
-    "build:stage1": "npm run build -w packages/animate -w packages/theme -w packages/plugin -w packages/preset -w packages/compiler -w packages/scanner -w packages/engine -w packages/cli -w packages/devtools -w packages/runtime-css -w packages/vite -w packages/rspack",
+    "build:stage1": "npm run build -w packages/analyzer -w packages/animate -w packages/theme -w packages/plugin -w packages/preset -w packages/compiler -w packages/scanner -w packages/engine -w packages/cli -w packages/devtools -w packages/runtime-css -w packages/vite -w packages/vscode -w packages/rspack",
     "build:stage2": "npm run build -w packages/next -w packages/core",
     "roadmap:build": "node scripts/roadmap/build-mermaid.mjs",
     "bench:native": "node benchmarks/native-parser-bench.mjs",
@@ -28,7 +28,17 @@
     "validate:pr5:gaps": "node scripts/validate/pr5-gap-check.mjs",
     "bench:incremental": "node scripts/benchmark/incremental.js",
     "verify:examples": "npm run build -w packages/core && npm run test -w examples/nextjs && npm run test -w examples/vite && npm run test -w examples/rspack && npm run test -w examples/simple && npm run test -w examples/package-frontend",
-    "build:test": "npm run build && npm run verify:examples"
+    "build:test": "npm run build && npm run verify:examples",
+    "fixture:massive": "node scripts/generate-massive-fixture.mjs",
+    "bench:massive": "npm run build -w @tailwind-styled/scanner -w @tailwind-styled/analyzer -w @tailwind-styled/engine && node scripts/benchmark/massive.mjs",
+    "bench:memory": "npm run build -w @tailwind-styled/scanner && node --expose-gc scripts/benchmark/memory-profile.mjs",
+    "bench:watch:stability": "npm run build -w @tailwind-styled/engine -w @tailwind-styled/scanner -w @tailwind-styled/compiler && node scripts/benchmark/watch-stability.mjs",
+    "ci:scale:trigger": "gh workflow run scale-benchmark.yml",
+    "ci:scale:download": "node scripts/benchmark/download-scale-artifacts.mjs",
+    "bench:scale:compare": "node scripts/benchmark/compare-scale-results.mjs --input=artifacts/scale-download --out=artifacts/scale-summary.json",
+    "bench:scale:baseline": "node scripts/benchmark/update-scale-baseline.mjs --source=artifacts/scale-summary.json --target=artifacts/scale-baseline.json",
+    "ci:scale:compare": "node scripts/benchmark/compare-scale-results.mjs --input=artifacts/scale-download --out=artifacts/scale-summary.json",
+    "ci:scale:baseline": "node scripts/benchmark/update-scale-baseline.mjs --source=artifacts/scale-summary.json --target=artifacts/scale-baseline.json"
   },
   "engines": {
     "node": ">=18"

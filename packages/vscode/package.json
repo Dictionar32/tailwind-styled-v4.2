@@ -1,0 +1,34 @@
+{
+  "name": "@tailwind-styled/vscode",
+  "version": "0.1.0",
+  "description": "VSCode extension for tailwind-styled analyzer insights",
+  "license": "MIT",
+  "type": "commonjs",
+  "main": "./dist/extension.js",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "activationEvents": [
+    "onCommand:tailwindStyled.analyzeWorkspace"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "tailwindStyled.analyzeWorkspace",
+        "title": "Tailwind Styled: Analyze Workspace"
+      }
+    ]
+  },
+  "scripts": {
+    "build": "tsup src/extension.ts --format cjs --out-dir dist --clean --external vscode",
+    "dev": "tsup src/extension.ts --format cjs --out-dir dist --watch --external vscode"
+  },
+  "dependencies": {
+    "@tailwind-styled/analyzer": "*"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "tsup": "^8",
+    "typescript": "^5"
+  }
+}
