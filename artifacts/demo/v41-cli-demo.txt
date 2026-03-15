@@ -1,0 +1,175 @@
+tailwind-styled-v4.1 demo transcript
+generatedAt: 2026-03-15T07:13:25.467Z
+
+=== Health summary ===
+
+> tailwind-styled-v4-monorepo@2.0.0 health:summary
+> node scripts/validate/health-summary.mjs
+
+Health summary written: artifacts/health-summary.json
+
+=== Repo health (PR5 gaps) ===
+
+> tailwind-styled-v4-monorepo@2.0.0 validate:pr5:gaps
+> node scripts/validate/pr5-gap-check.mjs
+
+PR5 gap check
+┌─────────┬────────────────────────────┬──────────┬────────────────────────────────────────────┬───────────┐
+│ (index) │ id                         │ priority │ path                                       │ status    │
+├─────────┼────────────────────────────┼──────────┼────────────────────────────────────────────┼───────────┤
+│ 0       │ 'scanner-ast-parser'       │ 'high'   │ 'packages/scanner/src/ast-parser.ts'       │ 'present' │
+│ 1       │ 'scanner-template-handler' │ 'high'   │ 'packages/scanner/src/template-handler.ts' │ 'present' │
+│ 2       │ 'benchmark-script'         │ 'high'   │ 'scripts/benchmark/incremental.js'         │ 'present' │
+│ 3       │ 'benchmark-ci'             │ 'high'   │ '.github/workflows/benchmark.yml'          │ 'present' │
+│ 4       │ 'large-fixture'            │ 'high'   │ 'test/fixtures/large-project/generated'    │ 'present' │
+│ 5       │ 'docs-api-core'            │ 'medium' │ 'docs/api/core.md'                         │ 'present' │
+│ 6       │ 'docs-api-scanner'         │ 'medium' │ 'docs/api/scanner.md'                      │ 'present' │
+│ 7       │ 'docs-api-engine'          │ 'medium' │ 'docs/api/engine.md'                       │ 'present' │
+│ 8       │ 'docs-api-cli'             │ 'medium' │ 'docs/api/cli.md'                          │ 'present' │
+│ 9       │ 'docs-api-vite'            │ 'medium' │ 'docs/api/vite.md'                         │ 'present' │
+│ 10      │ 'example-nextjs'           │ 'high'   │ 'examples/nextjs/package.json'             │ 'present' │
+│ 11      │ 'example-vite'             │ 'high'   │ 'examples/vite/package.json'               │ 'present' │
+│ 12      │ 'example-rspack'           │ 'high'   │ 'examples/rspack/package.json'             │ 'present' │
+│ 13      │ 'example-package-frontend' │ 'medium' │ 'examples/package-frontend/package.json'   │ 'present' │
+│ 14      │ 'example-simple'           │ 'medium' │ 'examples/simple/package.json'             │ 'present' │
+└─────────┴────────────────────────────┴──────────┴────────────────────────────────────────────┴───────────┘
+Missing: 0/15
+Incomplete: 0/15
+Artifact: artifacts/pr5-gap-check.json
+
+=== Public benchmark snapshot ===
+{
+  "root": "/workspace/tailwind-styled-v4.2/test/fixtures/large-project",
+  "files": 201,
+  "uniqueClasses": 5,
+  "timingsMs": {
+    "scan": 11,
+    "analyze": 1,
+    "engineBuildNoCss": 18
+  },
+  "memoryMb": {
+    "rss": 112,
+    "heapUsed": 33
+  },
+  "generatedAt": "2026-03-15T07:00:02.952Z"
+}
+
+=== Fresh massive benchmark ===
+
+> tailwind-styled-v4-monorepo@2.0.0 bench:massive
+> npm run build -w @tailwind-styled/compiler -w @tailwind-styled/scanner -w @tailwind-styled/analyzer -w @tailwind-styled/engine && node scripts/benchmark/massive.mjs --root=test/fixtures/large-project --out=artifacts/scale/massive-demo.json
+
+
+> @tailwind-styled/compiler@2.0.0 build
+> tsup src/index.ts --format cjs,esm --dts --out-dir dist --clean
+
+CLI Building entry: src/index.ts
+CLI Using tsconfig: tsconfig.json
+CLI tsup v8.5.1
+CLI Target: es2017
+CLI Cleaning output folder
+CJS Build start
+ESM Build start
+ESM dist/index.js 124.67 KB
+ESM ⚡️ Build success in 295ms
+CJS dist/index.cjs 128.97 KB
+CJS ⚡️ Build success in 296ms
+DTS Build start
+DTS ⚡️ Build success in 3119ms
+DTS dist/index.d.cts 25.71 KB
+DTS dist/index.d.ts  25.71 KB
+
+> @tailwind-styled/scanner@2.0.0 build
+> tsup src/index.ts --format cjs,esm --dts --out-dir dist --clean --external typescript
+
+CLI Building entry: src/index.ts
+CLI Using tsconfig: tsconfig.json
+CLI tsup v8.5.1
+CLI Target: es2017
+CLI Cleaning output folder
+CJS Build start
+ESM Build start
+CJS dist/index.cjs 15.09 KB
+CJS ⚡️ Build success in 114ms
+ESM dist/index.js 12.56 KB
+ESM ⚡️ Build success in 115ms
+DTS Build start
+DTS ⚡️ Build success in 3328ms
+DTS dist/index.d.cts 940.00 B
+DTS dist/index.d.ts  940.00 B
+
+> @tailwind-styled/analyzer@2.0.0 prebuild
+> npm run build -w @tailwind-styled/scanner
+
+
+> @tailwind-styled/scanner@2.0.0 build
+> tsup src/index.ts --format cjs,esm --dts --out-dir dist --clean --external typescript
+
+CLI Building entry: src/index.ts
+CLI Using tsconfig: tsconfig.json
+CLI tsup v8.5.1
+CLI Target: es2017
+CLI Cleaning output folder
+CJS Build start
+ESM Build start
+CJS dist/index.cjs 15.09 KB
+CJS ⚡️ Build success in 107ms
+ESM dist/index.js 12.56 KB
+ESM ⚡️ Build success in 107ms
+DTS Build start
+DTS ⚡️ Build success in 3325ms
+DTS dist/index.d.cts 940.00 B
+DTS dist/index.d.ts  940.00 B
+
+> @tailwind-styled/analyzer@2.0.0 build
+> tsup src/index.ts --format cjs,esm --dts --out-dir dist --clean
+
+CLI Building entry: src/index.ts
+CLI Using tsconfig: tsconfig.json
+CLI tsup v8.5.1
+CLI Target: es2017
+CLI Cleaning output folder
+CJS Build start
+ESM Build start
+CJS dist/index.cjs 2.29 KB
+CJS ⚡️ Build success in 116ms
+ESM dist/index.js 1.24 KB
+ESM ⚡️ Build success in 117ms
+DTS Build start
+DTS ⚡️ Build success in 2222ms
+DTS dist/index.d.cts 782.00 B
+DTS dist/index.d.ts  782.00 B
+
+> @tailwind-styled/engine@2.0.0 build
+> tsup src/index.ts --format cjs,esm --dts --out-dir dist --clean
+
+CLI Building entry: src/index.ts
+CLI Using tsconfig: tsconfig.json
+CLI tsup v8.5.1
+CLI Target: es2017
+CLI Cleaning output folder
+CJS Build start
+ESM Build start
+ESM dist/index.js 11.97 KB
+ESM ⚡️ Build success in 115ms
+CJS dist/index.cjs 14.16 KB
+CJS ⚡️ Build success in 117ms
+DTS Build start
+DTS ⚡️ Build success in 2375ms
+DTS dist/index.d.cts 3.56 KB
+DTS dist/index.d.ts  3.56 KB
+{
+  "root": "/workspace/tailwind-styled-v4.2/test/fixtures/large-project",
+  "files": 201,
+  "uniqueClasses": 5,
+  "timingsMs": {
+    "scan": 107,
+    "analyze": 1,
+    "engineBuildNoCss": 12
+  },
+  "memoryMb": {
+    "rss": 120,
+    "heapUsed": 36
+  },
+  "generatedAt": "2026-03-15T07:13:51.168Z"
+}

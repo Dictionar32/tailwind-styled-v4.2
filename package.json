@@ -30,7 +30,7 @@
     "verify:examples": "npm run build -w packages/core && npm run test -w examples/nextjs && npm run test -w examples/vite && npm run test -w examples/rspack && npm run test -w examples/simple && npm run test -w examples/package-frontend",
     "build:test": "npm run build && npm run verify:examples",
     "fixture:massive": "node scripts/generate-massive-fixture.mjs",
-    "bench:massive": "npm run build -w @tailwind-styled/scanner -w @tailwind-styled/analyzer -w @tailwind-styled/engine && node scripts/benchmark/massive.mjs",
+    "bench:massive": "npm run build -w @tailwind-styled/compiler -w @tailwind-styled/scanner -w @tailwind-styled/analyzer -w @tailwind-styled/engine && node scripts/benchmark/massive.mjs",
     "bench:memory": "npm run build -w @tailwind-styled/scanner && node --expose-gc scripts/benchmark/memory-profile.mjs",
     "bench:watch:stability": "npm run build -w @tailwind-styled/engine -w @tailwind-styled/scanner -w @tailwind-styled/compiler && node scripts/benchmark/watch-stability.mjs",
     "ci:scale:trigger": "gh workflow run scale-benchmark.yml",
@@ -38,7 +38,9 @@
     "bench:scale:compare": "node scripts/benchmark/compare-scale-results.mjs --input=artifacts/scale-download --out=artifacts/scale-summary.json",
     "bench:scale:baseline": "node scripts/benchmark/update-scale-baseline.mjs --source=artifacts/scale-summary.json --target=artifacts/scale-baseline.json",
     "ci:scale:compare": "node scripts/benchmark/compare-scale-results.mjs --input=artifacts/scale-download --out=artifacts/scale-summary.json",
-    "ci:scale:baseline": "node scripts/benchmark/update-scale-baseline.mjs --source=artifacts/scale-summary.json --target=artifacts/scale-baseline.json"
+    "ci:scale:baseline": "node scripts/benchmark/update-scale-baseline.mjs --source=artifacts/scale-summary.json --target=artifacts/scale-baseline.json",
+    "demo:v41:cli": "node scripts/demo/v41-cli-demo.mjs",
+    "demo:v41:cli:fresh": "npm run build && node scripts/demo/v41-cli-demo.mjs --with-bench"
   },
   "engines": {
     "node": ">=18"

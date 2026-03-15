@@ -14,6 +14,9 @@
 
 - [Quick Start](#quick-start)
 - [Installation](#installation)
+- [Public Benchmark](#public-benchmark)
+- [Roadmap v4.1 Backlog](#roadmap-v41-backlog)
+- [Demo (CLI + UI)](#demo-cli--ui)
 - [Core API](#core-api)
   - [tw — Template Literal](#tw--template-literal)
   - [tw — Object Config (Variants)](#tw--object-config-variants)
@@ -130,6 +133,60 @@ npm install tailwindcss @tailwindcss/postcss react react-dom
 | Next.js       | ≥ 14    |
 | Tailwind CSS  | ≥ 4.0   |
 | TypeScript    | ≥ 5.0   |
+
+---
+
+## Public Benchmark
+
+Benchmark publik awal (lokal) untuk workload fixture besar dapat direproduksi dengan:
+
+```bash
+npm run bench:massive -- --root=test/fixtures/large-project --out=artifacts/scale/massive-readme.json
+```
+
+Contoh baseline lokal terbaru (lihat `docs/benchmark/public-benchmark-snapshot.json`):
+
+| Metric | Value |
+|---|---:|
+| Files scanned | 201 |
+| Unique classes | 5 |
+| Scan time | 11 ms |
+| Analyze time | 1 ms |
+| Engine build (no CSS) | 18 ms |
+| RSS memory | 112 MB |
+| Heap used | 33 MB |
+
+Metrik yang dilacak pada output JSON:
+- `files` (jumlah file yang dipindai),
+- `uniqueClasses`,
+- `timingsMs.scan`, `timingsMs.analyze`, `timingsMs.engineBuildNoCss`,
+- `memoryMb.rss`, `memoryMb.heapUsed`.
+
+> Untuk workflow lintas OS/Node, gunakan command namespace `ci:scale:*` yang dijelaskan di `docs/ops/scale-testing.md`.
+
+## Roadmap v4.1 Backlog
+
+Backlog resmi v4.1 tersedia di `docs/roadmap/v4.1-backlog.md` dan mencakup:
+- Rust parser default + fallback strategy,
+- benchmark publik README,
+- video/GIF demo,
+- hardening example Next.js existing di `examples/standar-config-next-js-app` (token switch + cart state + container query demo),
+- draft blog announcement,
+- contributing guide lengkap.
+
+---
+
+
+## Demo (CLI + UI)
+
+Untuk kebutuhan demo v4.1 (sebelum GIF/video final), gunakan runbook berikut:
+
+```bash
+npm run demo:v41:cli
+npm run demo:v41:cli:fresh
+```
+
+Runbook lengkap: `docs/ops/v4.1-demo-runbook.md`.
 
 ---
 

@@ -1,5 +1,24 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- v4.1 backlog tracker di `docs/roadmap/v4.1-backlog.md`.
+- Draft announcement v4.1 di `docs/blog/introducing-tailwind-styled-v4.1-draft.md`.
+- Gunakan example Next.js existing di `examples/standar-config-next-js-app` sebagai baseline frontend untuk backlog v4.1 (tanpa folder example baru).
+
+### Changed
+
+- README menambahkan section Public Benchmark + referensi backlog v4.1.
+- CONTRIBUTING diperluas dengan workflow kontribusi dan validasi benchmark terkait skala.
+- Hardening existing Next.js frontend example (tanpa folder baru) dengan live token switching, cart state, dan container query demo.
+- Scanner menambahkan jalur native-first (Rust binding) dengan fallback aman ke parser JS + debug flag `TWS_DEBUG_SCANNER=1`.
+- Benchmark massive script diperbaiki agar reproducible di workspace (build order + import dist lokal untuk analyzer/engine/scanner).
+- Menambahkan runbook demo v4.1 (`docs/ops/v4.1-demo-runbook.md`) dan script transcript CLI (`npm run demo:v41:cli`/`demo:v41:cli:fresh`) dengan output health summary + gap check + benchmark snapshot.
+
+---
+
 ## v2.1.0-alpha.1 — Tailwind v4 Upgrade Path
 
 ### Added
