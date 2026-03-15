@@ -1,29 +1,60 @@
 # Scanner API
 
-## `scanSource(source: string)`
-Ekstrak class dari source code string dengan gabungan extractor compiler + AST JSX/TSX.
+Dokumen ini menjelaskan API publik dari paket `@tailwind-styled/scanner`.
 
-## `scanFile(filePath: string)`
-Baca file dari disk lalu kembalikan:
+## `scanSource(source: string): string[]`
+Mengekstrak class Tailwind dari source code string menggunakan kombinasi:
+- extractor dari compiler, dan
+- parser AST JSX/TSX.
+
+Cocok untuk skenario analisis per file atau integrasi tool custom.
+
+## `scanFile(filePath: string): ScanFileResult`
+Membaca 1 file dari disk, lalu mengembalikan hasil scan class.
 
 ```ts
-{ file: string; classes: string[] }
+interface ScanFileResult {
+  file: string
+  classes: string[]
+}
+```
 
-scanWorkspace(rootDir, options)
-Scan direktori rekursif.
+## `scanWorkspace(rootDir: string, options?: ScanWorkspaceOptions): ScanWorkspaceResult`
+Melakukan scan direktori secara rekursif.
 
-Opsi penting
-includeExtensions
+### Opsi
+```ts
+interface ScanWorkspaceOptions {
+  includeExtensions?: string[]
+  ignoreDirectories?: string[]
+  useCache?: boolean
+  cacheDir?: string
+  smartInvalidation?: boolean
+}
+```
 
-ignoreDirectories
+Keterangan singkat:
+- `includeExtensions`: ekstensi file yang discan (default: `.js`, `.jsx`, `.ts`, `.tsx`, `.mjs`, `.cjs`).
+- `ignoreDirectories`: folder yang diabaikan (mis. `node_modules`, `.git`, `dist`).
+- `useCache`: aktif/nonaktif cache hasil scan (default `true`).
+- `cacheDir`: lokasi direktori cache kustom.
+- `smartInvalidation`: aktifkan strategi invalidasi cache cerdas (default `true`).
 
-useCache (default true)
+### Output
+```ts
+interface ScanWorkspaceResult {
+  files: ScanFileResult[]
+  totalFiles: number
+  uniqueClasses: string[]
+}
+```
 
-cacheDir
+## Catatan build
+Mulai versi saat ini, build scanner menandai `typescript` sebagai dependency eksternal pada bundling (`--external typescript`) agar bundle runtime tetap ringan dan kompatibel saat digunakan oleh CLI ESM.
 
-Output
-files
 
-totalFiles
-
-uniqueClasses
+## Smart invalidation
+Saat `smartInvalidation` aktif, scanner akan:
+- mengurutkan prioritas scan berdasarkan perubahan file + jejak akses cache,
+- membersihkan entry cache untuk file yang sudah hilang,
+- tetap fallback aman ke scan penuh bila data cache tidak valid.
