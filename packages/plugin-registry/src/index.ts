@@ -1,6 +1,8 @@
 import { spawnSync } from "node:child_process"
 import registryData from "../registry.json"
 
+const PLUGIN_NAME_REGEX = /^(@[a-z0-9-]+\/)?[a-z0-9-]+$/
+
 export interface PluginInfo {
   name: string
   description: string
@@ -19,6 +21,46 @@ export interface InstallResult {
   installed: boolean
   command: string
   exitCode: number
+}
+
+export type PluginRegistryErrorCode =
+  | "INVALID_PLUGIN_NAME"
+  | "PLUGIN_NOT_FOUND"
+  | "EXTERNAL_CONFIRMATION_REQUIRED"
+  | "INSTALL_COMMAND_FAILED"
+  | "INSTALL_FAILED"
+
+export interface PluginRegistryErrorPayload {
+  code: PluginRegistryErrorCode
+  message: string
+  context?: Record<string, unknown>
+}
+
+export class PluginRegistryError extends Error {
+  readonly code: PluginRegistryErrorCode
+  readonly context?: Record<string, unknown>
+
+  constructor(payload: PluginRegistryErrorPayload) {
+    super(payload.message)
+    this.name = "PluginRegistryError"
+    this.code = payload.code
+    this.context = payload.context
+  }
+
+  toObject(): PluginRegistryErrorPayload {
+    return {
+      code: this.code,
+      message: this.message,
+      context: this.context,
+    }
+  }
+}
+
+export interface InstallOptions {
+  dryRun?: boolean
+  npmBin?: string
+  allowExternal?: boolean
+  confirmExternal?: boolean
 }
 
 export class PluginRegistry {
@@ -60,18 +102,84 @@ export class PluginRegistry {
     return [...this.plugins]
   }
 
-  install(pluginName: string, options: { dryRun?: boolean } = {}): InstallResult {
-    const command = `npm install ${pluginName}`
+  getByName(pluginName: string): PluginInfo | undefined {
+    return this.plugins.find((plugin) => plugin.name === pluginName)
+  }
+
+  install(pluginName: string, options: InstallOptions = {}): InstallResult {
+    const npmBin = options.npmBin ?? process.env.TW_PLUGIN_NPM_BIN ?? "npm"
+
+    if (!PLUGIN_NAME_REGEX.test(pluginName)) {
+      throw new PluginRegistryError({
+        code: "INVALID_PLUGIN_NAME",
+        message: `Nama plugin tidak valid: '${pluginName}'.`,
+        context: {
+          pluginName,
+          expectedPattern: String(PLUGIN_NAME_REGEX),
+        },
+      })
+    }
+
+    const knownPlugin = this.getByName(pluginName)
+    const isExternal = !knownPlugin
+
+    if (isExternal && !options.allowExternal) {
+      throw new PluginRegistryError({
+        code: "PLUGIN_NOT_FOUND",
+        message: `Plugin '${pluginName}' tidak ditemukan di registry. Coba cari dengan 'tw-plugin search <keyword>'.`,
+        context: {
+          pluginName,
+          allowExternal: false,
+        },
+      })
+    }
+
+    if (isExternal && options.allowExternal && !options.confirmExternal) {
+      throw new PluginRegistryError({
+        code: "EXTERNAL_CONFIRMATION_REQUIRED",
+        message: `Plugin eksternal '${pluginName}' butuh konfirmasi. Jalankan ulang dengan --allow-external --yes.`,
+        context: {
+          pluginName,
+          allowExternal: true,
+        },
+      })
+    }
+
+    const command = `${npmBin} install ${pluginName}`
     if (options.dryRun) {
       return { plugin: pluginName, installed: true, command, exitCode: 0 }
     }
 
-    const child = spawnSync("npm", ["install", pluginName], { stdio: "inherit" })
+    const child = spawnSync(npmBin, ["install", pluginName], { stdio: "inherit" })
+    if (child.error) {
+      throw new PluginRegistryError({
+        code: "INSTALL_COMMAND_FAILED",
+        message: `Gagal menjalankan perintah install: ${command}`,
+        context: {
+          pluginName,
+          command,
+          reason: child.error.message,
+        },
+      })
+    }
+
+    if (child.status !== 0) {
+      throw new PluginRegistryError({
+        code: "INSTALL_FAILED",
+        message: `Install gagal (${child.status ?? 1}): ${command}`,
+        context: {
+          pluginName,
+          command,
+          exitCode: child.status ?? 1,
+        },
+      })
+    }
+
     return {
       plugin: pluginName,
-      installed: child.status === 0,
+      installed: true,
       command,
-      exitCode: child.status ?? 1,
+      exitCode: 0,
     }
   }
 }

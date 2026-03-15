@@ -1,8 +1,39 @@
 #!/usr/bin/env node
-import { registry } from "./index"
+import { PluginRegistryError, registry } from "./index"
 
 function printHelp(): void {
-  console.log(`tw-plugin commands:\n  search <query>\n  install <package> [--dry-run]\n  list`)
+  console.log(`tw-plugin commands:
+  search <query>
+  install <package> [--dry-run] [--allow-external] [--yes]
+  list`)
+}
+
+function isTruthyFlag(args: string[], flag: string): boolean {
+  return args.includes(flag)
+}
+
+function firstNonFlag(args: string[]): string | undefined {
+  return args.find((item) => !item.startsWith("-"))
+}
+
+function maybeRed(text: string): string {
+  if (!process.stderr.isTTY) return text
+  return `\x1b[31m${text}\x1b[0m`
+}
+
+function printError(error: unknown): never {
+  if (error instanceof PluginRegistryError) {
+    const normalized = error.toObject()
+    console.error(maybeRed(`[${normalized.code}] ${normalized.message}`))
+    if (normalized.context) {
+      console.error(maybeRed(`context: ${JSON.stringify(normalized.context)}`))
+    }
+    process.exit(1)
+  }
+
+  const message = error instanceof Error ? error.message : String(error)
+  console.error(maybeRed(`[UNEXPECTED_ERROR] ${message}`))
+  process.exit(1)
 }
 
 function run(): void {
@@ -39,25 +70,30 @@ function run(): void {
   }
 
   if (command === "install") {
-    const pluginName = rest.find((item) => !item.startsWith("-"))
-    const dryRun = rest.includes("--dry-run")
+    const pluginName = firstNonFlag(rest)
+    const dryRun = isTruthyFlag(rest, "--dry-run")
+    const allowExternal = isTruthyFlag(rest, "--allow-external")
+    const confirmExternal = isTruthyFlag(rest, "--yes")
 
     if (!pluginName) {
-      console.error("Missing plugin name")
+      console.error(maybeRed("Missing plugin name"))
       process.exit(1)
     }
 
-    const result = registry.install(pluginName, { dryRun })
-    if (!result.installed) {
-      console.error(`Install failed (${result.exitCode}): ${result.command}`)
-      process.exit(result.exitCode)
+    try {
+      const result = registry.install(pluginName, {
+        dryRun,
+        allowExternal,
+        confirmExternal,
+      })
+      console.log(`Installed: ${result.plugin}`)
+      return
+    } catch (error) {
+      printError(error)
     }
-
-    console.log(`Installed: ${pluginName}`)
-    return
   }
 
-  console.error(`Unknown command: ${command}`)
+  console.error(maybeRed(`Unknown command: ${command}`))
   printHelp()
   process.exit(1)
 }

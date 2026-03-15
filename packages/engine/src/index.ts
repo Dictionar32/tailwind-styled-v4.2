@@ -1,5 +1,6 @@
 import fs from "node:fs"
 import path from "node:path"
+import { pathToFileURL } from "node:url"
 
 import { generateCssForClasses, mergeClassesStatic } from "@tailwind-styled/compiler"
 import { scanWorkspace, type ScanWorkspaceOptions, type ScanWorkspaceResult } from "@tailwind-styled/scanner"
@@ -63,10 +64,27 @@ export interface TailwindStyledEngine {
   watch(onEvent: (event: EngineWatchEvent) => void, options?: EngineWatchOptions): Promise<{ close(): void }>
 }
 
+async function loadTailwindConfigFromPath(
+  root: string,
+  tailwindConfigPath?: string
+): Promise<Record<string, unknown> | undefined> {
+  if (!tailwindConfigPath) return undefined
+
+  const configPath = path.resolve(root, tailwindConfigPath)
+  if (!fs.existsSync(configPath)) {
+    throw new Error(`tailwindConfigPath not found: ${configPath}`)
+  }
+
+  const imported = await import(pathToFileURL(configPath).href)
+  const config = (imported.default ?? imported) as Record<string, unknown>
+  return config
+}
+
 async function buildFromScan(
   scan: ScanWorkspaceResult,
   root: string,
-  options: EngineOptions
+  options: EngineOptions,
+  tailwindConfig?: Record<string, unknown>
 ): Promise<BuildResult> {
   const plugins = options.plugins ?? []
   const context = { root, timestamp: Date.now() }
@@ -79,7 +97,7 @@ async function buildFromScan(
   if (options.compileCss !== false && mergedClassList.length > 0) {
     css = await generateCssForClasses(
       mergedClassList.split(/\s+/).filter(Boolean),
-      undefined,
+      tailwindConfig,
       root
     )
   }
@@ -99,17 +117,43 @@ export async function createEngine(options: EngineOptions = {}): Promise<Tailwin
 
   const plugins = options.plugins ?? []
 
-  const doScan = async (): Promise<ScanWorkspaceResult> => {
+  let cachedTailwindConfig: Record<string, unknown> | undefined
+  let tailwindConfigLoaded = false
+
+  const getTailwindConfig = async (): Promise<Record<string, unknown> | undefined> => {
+    if (tailwindConfigLoaded) return cachedTailwindConfig
+    cachedTailwindConfig = await loadTailwindConfigFromPath(resolvedRoot, options.tailwindConfigPath)
+    tailwindConfigLoaded = true
+    return cachedTailwindConfig
+  }
+
+  const reportEngineError = async (error: unknown): Promise<Error> => {
+    const normalized = error instanceof Error ? error : new Error(String(error))
     const context = { root: resolvedRoot, timestamp: Date.now() }
-    await runBeforeScan(plugins, context)
-    const scan = scanWorkspace(resolvedRoot, options.scanner)
-    return runAfterScan(plugins, scan, context)
+    await runOnError(plugins, normalized, context)
+    return normalized
+  }
+
+  const doScan = async (): Promise<ScanWorkspaceResult> => {
+    try {
+      const context = { root: resolvedRoot, timestamp: Date.now() }
+      await runBeforeScan(plugins, context)
+      const scan = scanWorkspace(resolvedRoot, options.scanner)
+      return await runAfterScan(plugins, scan, context)
+    } catch (error) {
+      throw await reportEngineError(error)
+    }
   }
 
   return {
     scan: doScan,
     async build(): Promise<BuildResult> {
-      return buildFromScan(await doScan(), resolvedRoot, options)
+      const scan = await doScan()
+      try {
+        return await buildFromScan(scan, resolvedRoot, options, await getTailwindConfig())
+      } catch (error) {
+        throw await reportEngineError(error)
+      }
     },
     async watch(
       onEvent: (event: EngineWatchEvent) => void,
@@ -119,8 +163,15 @@ export async function createEngine(options: EngineOptions = {}): Promise<Tailwin
       const maxEventsPerFlush = watchOptions.maxEventsPerFlush ?? DEFAULT_MAX_EVENTS_PER_FLUSH
       const largeFileThreshold = watchOptions.largeFileThreshold ?? DEFAULT_LARGE_FILE_THRESHOLD_BYTES
 
+      const tailwindConfig = await getTailwindConfig()
       let currentScan = await doScan()
-      onEvent({ type: "initial", result: await buildFromScan(currentScan, resolvedRoot, options) })
+      try {
+        onEvent({ type: "initial", result: await buildFromScan(currentScan, resolvedRoot, options, tailwindConfig) })
+      } catch (error) {
+        const normalized = await reportEngineError(error)
+        onEvent({ type: "error", error: normalized.message })
+        throw normalized
+      }
 
       let timer: NodeJS.Timeout | null = null
       const queue: Array<{ type: "change" | "unlink"; filePath: string }> = []
@@ -182,16 +233,26 @@ export async function createEngine(options: EngineOptions = {}): Promise<Tailwin
           emittedType = "full-rescan"
         }
 
-        const started = Date.now()
-        const result = await buildFromScan(currentScan, resolvedRoot, options)
-        metrics.markBuildDuration(Date.now() - started)
+        try {
+          const started = Date.now()
+          const result = await buildFromScan(currentScan, resolvedRoot, options, tailwindConfig)
+          metrics.markBuildDuration(Date.now() - started)
 
-        onEvent({
-          type: emittedType,
-          filePath: lastEvent.filePath,
-          result,
-          metrics: metrics.snapshot(),
-        })
+          onEvent({
+            type: emittedType,
+            filePath: lastEvent.filePath,
+            result,
+            metrics: metrics.snapshot(),
+          })
+        } catch (error) {
+          const normalized = await reportEngineError(error)
+          onEvent({
+            type: "error",
+            filePath: lastEvent.filePath,
+            error: normalized.message,
+            metrics: metrics.snapshot(),
+          })
+        }
 
         if (queue.length > 0) scheduleFlush()
       }
@@ -207,8 +268,7 @@ export async function createEngine(options: EngineOptions = {}): Promise<Tailwin
           ignoreDirectories: options.scanner?.ignoreDirectories,
           debounceMs: flushDebounceMs,
           onError: (error, directory) => {
-            const context = { root: resolvedRoot, timestamp: Date.now() }
-            void runOnError(plugins, error, context)
+            void reportEngineError(error)
             onEvent({
               type: "error",
               filePath: directory,
