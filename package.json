@@ -2,7 +2,7 @@
   "name": "tailwind-styled-v4-monorepo",
   "version": "2.0.0",
   "private": true,
-  "description": "Monorepo for tailwind-styled-v4 \u2014 compiler-driven, RSC-aware styling",
+  "description": "Monorepo for tailwind-styled-v4 — compiler-driven, RSC-aware styling",
   "workspaces": [
     "packages/*",
     "examples/*"
@@ -40,7 +40,23 @@
     "ci:scale:compare": "node scripts/benchmark/compare-scale-results.mjs --input=artifacts/scale-download --out=artifacts/scale-summary.json",
     "ci:scale:baseline": "node scripts/benchmark/update-scale-baseline.mjs --source=artifacts/scale-summary.json --target=artifacts/scale-baseline.json",
     "demo:v41:cli": "node scripts/demo/v41-cli-demo.mjs",
-    "demo:v41:cli:fresh": "npm run build && node scripts/demo/v41-cli-demo.mjs --with-bench"
+    "demo:v41:cli:fresh": "npm run build && node scripts/demo/v41-cli-demo.mjs --with-bench",
+    "v4.2:plugin-registry": "npm run build -w @tailwind-styled/plugin-registry",
+    "v4.2:create": "printf \"Use: npx create-tailwind-styled <name> and choose template\n\"",
+    "v4.2:dashboard": "npm run dev -w @tailwind-styled/dashboard",
+    "v4.2:testing": "npm run build -w @tailwind-styled/testing",
+    "v4.2:storybook": "npm run build -w @tailwind-styled/storybook-addon",
+    "v4.3:build": "npm run build -w create-tailwind-styled",
+    "v4.3:demo": "node packages/cli/dist/index.js --help",
+    "v4.5:demo": "node packages/cli/dist/index.js audit",
+    "v4.5:ai:demo": "node packages/cli/dist/index.js ai \"generate blue button\"",
+    "v4.6:demo": "node packages/cli/dist/index.js parse packages/scanner/src/index.ts",
+    "v4.7:demo": "node packages/cli/dist/index.js minify packages/cli/dist/index.js",
+    "v4.8:demo": "node packages/cli/dist/index.js lint . 8",
+    "bench:toolchains": "node scripts/v48/benchmark-toolchains.mjs",
+    "v4.9:demo": "node packages/cli/dist/index.js optimize packages/cli/src/index.ts --constant-folding --partial-eval",
+    "v5.0:demo": "node packages/cli/dist/index.js cache enable s3://tailwind-cache",
+    "v5.0:metrics": "node packages/cli/dist/index.js metrics 3030"
   },
   "engines": {
     "node": ">=18"

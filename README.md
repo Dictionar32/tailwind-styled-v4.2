@@ -16,6 +16,7 @@
 - [Installation](#installation)
 - [Public Benchmark](#public-benchmark)
 - [Roadmap v4.1 Backlog](#roadmap-v41-backlog)
+- [Roadmap v4.2 Backlog](#roadmap-v42-backlog)
 - [Demo (CLI + UI)](#demo-cli--ui)
 - [Core API](#core-api)
   - [tw — Template Literal](#tw--template-literal)
@@ -162,7 +163,13 @@ Metrik yang dilacak pada output JSON:
 - `timingsMs.scan`, `timingsMs.analyze`, `timingsMs.engineBuildNoCss`,
 - `memoryMb.rss`, `memoryMb.heapUsed`.
 
-> Untuk workflow lintas OS/Node, gunakan command namespace `ci:scale:*` yang dijelaskan di `docs/ops/scale-testing.md`.
+Untuk snapshot lintas OS/Node berkala dari CI:
+
+- workflow: `.github/workflows/publish-benchmark.yml`,
+- output agregasi: `docs/benchmark/cross-platform.json`,
+- script agregasi: `node scripts/benchmark/aggregate-results.mjs --input=artifacts/benchmark --out=docs/benchmark/cross-platform.json`.
+
+> Untuk workflow scale benchmark ad-hoc, gunakan command namespace `ci:scale:*` yang dijelaskan di `docs/ops/scale-testing.md`.
 
 ## Roadmap v4.1 Backlog
 
@@ -177,16 +184,39 @@ Backlog resmi v4.1 tersedia di `docs/roadmap/v4.1-backlog.md` dan mencakup:
 ---
 
 
+## Roadmap v4.2 Backlog
+
+Backlog inisiasi v4.2 tersedia di `docs/roadmap/v4.2-backlog.md`, mencakup scaffold awal untuk:
+- plugin registry + CLI plugin manager,
+- command baru extension VS Code,
+- create-tailwind-styled starter CLI,
+- dashboard performa berbasis web,
+- testing utilities package,
+- storybook addon helpers.
+
+---
+
+
 ## Demo (CLI + UI)
 
-Untuk kebutuhan demo v4.1 (sebelum GIF/video final), gunakan runbook berikut:
+Untuk demo v4.1, jalankan transcript CLI:
 
 ```bash
 npm run demo:v41:cli
 npm run demo:v41:cli:fresh
 ```
 
-Runbook lengkap: `docs/ops/v4.1-demo-runbook.md`.
+Untuk generate aset GIF/MP4 (jika tool lokal tersedia):
+
+```bash
+bash scripts/demo/generate-demo-assets.sh
+```
+
+Dokumen operasional lengkap:
+- runbook: `docs/ops/v4.1-demo-runbook.md`
+- assets folder: `docs/assets/`
+
+Untuk regression test parser lintas OS/Node via CI, lihat `.github/workflows/rust-parser-regression.yml` dan script `scripts/regression/rust-parser.js`.
 
 ---
 
@@ -1445,8 +1475,65 @@ export default defineConfig({
 ## CLI Tools
 
 ```bash
-npx tailwind-styled [command] [dir] [options]
+npx tw [command] [options]
+# alias kompatibel lama:
+# npx tailwind-styled [command] [dir] [options]
 ```
+
+### Unified commands (v4.3)
+
+```bash
+npx tw plugin search animation
+npx tw create my-app --template=next-app
+npx tw dashboard --port=3000
+npx tw test --watch
+npx tw storybook --variants='{"size":["sm","md","lg"]}'
+npx tw code --docs
+```
+
+Referensi roadmap: `docs/roadmap/v4.3-command-densification.md`.
+
+### Platform mode preview (v4.5)
+
+```bash
+npx tw studio
+npx tw deploy button
+npx tw ai "buat tombol biru"
+npx tw sync init
+npx tw audit
+npx tw share button
+```
+
+Lihat juga: `docs/roadmap/v4.5-platform-mode.md`.
+
+### Oxide acceleration preview (v4.6–v4.8)
+
+```bash
+npx tw parse packages/scanner/src/index.ts
+npx tw transform packages/cli/src/index.ts transformed.js
+npx tw minify packages/cli/dist/index.js
+npx tw lint . 8
+npx tw format packages/cli/src/index.ts
+npx tw benchmark
+```
+
+Roadmap: `docs/roadmap/v4.6-4.8-oxide-takeover.md`.
+
+### Compile-time & distributed preview (v4.9–v5.0)
+
+```bash
+npx tw optimize packages/cli/src/index.ts --constant-folding --partial-eval
+npx tw split . artifacts/route-css
+npx tw critical index.html dist/styles.css
+npx tw cache enable s3://tailwind-cache
+npx tw cluster init 16
+npx tw adopt partial-eval .
+npx tw metrics 3030
+```
+
+Roadmap: `docs/roadmap/v4.8-5.0-speed-styling.md`.
+
+
 
 ### analyze — CSS usage report
 

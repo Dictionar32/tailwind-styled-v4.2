@@ -9,13 +9,23 @@
     "vscode": "^1.85.0"
   },
   "activationEvents": [
-    "onCommand:tailwindStyled.analyzeWorkspace"
+    "onCommand:tailwindStyled.analyzeWorkspace",
+    "onCommand:tailwindStyled.installPlugin",
+    "onCommand:tailwindStyled.createComponent"
   ],
   "contributes": {
     "commands": [
       {
         "command": "tailwindStyled.analyzeWorkspace",
         "title": "Tailwind Styled: Analyze Workspace"
+      },
+      {
+        "command": "tailwindStyled.installPlugin",
+        "title": "Tailwind Styled: Install Plugin"
+      },
+      {
+        "command": "tailwindStyled.createComponent",
+        "title": "Tailwind Styled: Create Component"
       }
     ]
   },

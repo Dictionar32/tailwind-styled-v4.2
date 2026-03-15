@@ -1,12 +1,13 @@
 {
   "name": "create-tailwind-styled",
   "version": "2.0.0",
-  "description": "CLI scaffolding tool \u2014 npx create-tailwind-styled",
+  "description": "CLI scaffolding tool — npx create-tailwind-styled",
   "license": "MIT",
   "type": "module",
   "bin": {
     "create-tailwind-styled": "./dist/createApp.js",
-    "tailwind-styled": "./dist/index.js"
+    "tailwind-styled": "./dist/index.js",
+    "tw": "./dist/index.js"
   },
   "files": [
     "dist"

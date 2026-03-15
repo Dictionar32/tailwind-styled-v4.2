@@ -1,0 +1,17 @@
+{
+  "generatedAt": "2026-03-15T08:15:54.386Z",
+  "parser": {
+    "oxc": {
+      "status": "optional",
+      "note": "uses oxc-parser when installed"
+    },
+    "fallback": {
+      "status": "active",
+      "note": "regex parser fallback for local prototype"
+    }
+  },
+  "lint": {
+    "mode": "parallel-simulated",
+    "source": "scripts/v48/lint-parallel.mjs"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "official": [
+    {
+      "name": "@tailwind-styled/plugin-animation",
+      "description": "Animation presets and keyframes",
+      "version": "1.0.0",
+      "tags": ["animation", "motion"]
+    },
+    {
+      "name": "@tailwind-styled/plugin-typography",
+      "description": "Prose and typography utilities",
+      "version": "1.0.0",
+      "tags": ["typography", "prose"]
+    },
+    {
+      "name": "@tailwind-styled/plugin-forms",
+      "description": "Form input styling helpers",
+      "version": "1.0.0",
+      "tags": ["forms", "inputs"]
+    }
+  ],
+  "community": []
+}
